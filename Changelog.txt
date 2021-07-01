@@ -1,0 +1,25 @@
+Version 0.6
+------
+* Fix PONG message (didn't actually work before)
+
+Version 0.5
+------
+* Automatically send PONG when IRC server requests PING (prevents disconnect every 10 minutes)
+
+Version 0.4
+------
+* Added alias for !movemouse so you can just use !mouse
+* Try to auto restart when something fails
+
+Version 0.3
+------
+* Added commands for relative mouse movements and boxes, with optional distances (see README.txt)
+
+Version 0.2
+------
+* Allow negative numbers in the !box command
+
+
+Version 0.1
+------
+* First Release
