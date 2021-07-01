@@ -1,3 +1,8 @@
+Version 0.7
+------
+* User credentials are now stored in a config file. You will no longer need to
+  edit the script to set them (see README.txt)
+
 Version 0.6
 ------
 * Fix PONG message (didn't actually work before)

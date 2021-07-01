@@ -1,4 +1,4 @@
-* Move config to separate file stored in appropriate user config dir on windows/linux
+DONE * Move config to separate file stored in appropriate user config dir on windows/linux
 * Split IRC / command processing into separate files
 * Cleanup regex code to make it easier to add new commands
 * Add GUI with basic config options (username/channel/password) and start/stop button
