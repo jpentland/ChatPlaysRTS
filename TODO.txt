@@ -9,3 +9,4 @@
 * Ability to sync VIP/moderators to restrict commands to them
 * Ability to bind commands to keypresses via config file
 * All config file options also available in GUI
+* stop/start commands for owner
