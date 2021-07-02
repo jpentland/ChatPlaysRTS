@@ -10,26 +10,40 @@ class Execution():
         self.commands = self.compileCommands(defaultCommands)
         self.screenWidth, self.screenHeight = pg.size()
 
+        self.operations = {
+            "movemouse" : Execution.moveMouse,
+            "click" : Execution.click,
+            "relmouse" : Execution.relMouse,
+            "box" : Execution.box,
+        }
+
     # Process an incoming command at runtime
     def processCommand(self, message):
+        message = message.lower()
         for command in self.commands:
             match = command[0].match(message)
             if match != None:
                 print("Matched message: %s" % message)
+                operation = self.parse_operation(command[1])
                 args = self.processArgs(command[2], match)
-                command[1](self, *args, **command[3])
+                operation(self, *args, **command[3])
 
     # Process args for execution of an incoming command at runtime
     def processArgs(self, args, match):
         newArgs = []
+        group = []
+        config = self.config
+
+        # Try to convert all matched values to float, if possible
+        for g in match.groups():
+            try:
+                group.append(float(g))
+            except ValueError:
+                group.append(g)
+
+        # Evaluate all args as python code
         for arg in args:
-            # All params use f, because f defaults to unary
-            if type(arg) is ReParam:
-                newArgs.append(arg.f(self, match.group(arg.index)))
-            elif type(arg) is ConfigParam:
-                newArgs.append(arg.f(self, self.config[arg.name]))
-            else:
-                newArgs.append(arg)
+            newArgs.append(eval(str(arg)))
 
         return newArgs
 
@@ -72,48 +86,40 @@ class Execution():
     def click(self, *args, **kwargs):
         pg.click(*args, **kwargs)
 
-class ReParam:
-    # Parameter is a regex group, with index i, goes through function f
-    def __init__(self, index, f = Execution.unary):
-        self.index = index
-        self.f = f
-
-class ConfigParam:
-    # Parameter is a config option, with index i, goes through function f
-    def __init__(self, name, f = Execution.unary):
-        self.name = name
-        self.f = f
+    # Parse function call and parameters as defined in command config
+    def parse_operation(self, fstring):
+        return self.operations[fstring.strip().lower()]
 
 defaultCommands = [
-        ["!(?:movemouse|mouse) ([0-9\.]+) ([0-9\.]+)", Execution.moveMouse, [ReParam(1), ReParam(2)], {}],
-        ["!box (-?[0-9\.]+) (-?[0-9\.]+)", Execution.box, [ReParam(1), ReParam(2)], {}],
-        ["!(?:click|leftclick)",  Execution.click, [], {}],
-        ["!rightclick", Execution.click, [], {"button" : "right"}],
-        ["!middleclick", Execution.click, [], {"button" : "middle"}],
-        ["!doubleclick", Execution.click, [], {"clicks" : 2}],
-        ["!mouseup", Execution.relMouse, [0, ConfigParam("defaultDistance", f = Execution.negate)], {}],
-        ["!mouseup ([0-9\.]+)", Execution.relMouse, [0, ReParam(1, f = Execution.negate)], {}],
-        ["!mousedown", Execution.relMouse, [0, ConfigParam("defaultDistance")], {}],
-        ["!mousedown ([0-9\.]+)", Execution.relMouse, [0, ReParam(1)], {}],
-        ["!mouseleft", Execution.relMouse, [ConfigParam("defaultDistance", f = Execution.negate), 0], {}],
-        ["!mouseleft ([0-9\.]+)", Execution.relMouse, [ReParam(1, f = Execution.negate), 0], {}],
-        ["!mouseright", Execution.relMouse, [ConfigParam("defaultDistance"), 0], {}],
-        ["!mouseright ([0-9\.]+)", Execution.relMouse, [ReParam(1), 0], {}],
-        ["!mouseupleft", Execution.relMouse, [ConfigParam("defaultDistance", f = Execution.negate), ConfigParam("defaultDistance", f = Execution.negate)], {}],
-        ["!mouseupleft ([0-9\.]+)", Execution.relMouse, [ReParam(1, f = Execution.negate), ReParam(1, f = Execution.negate)], {}],
-        ["!mouseupright", Execution.relMouse, [ConfigParam("defaultDistance"), ConfigParam("defaultDistance", f = Execution.negate)], {}],
-        ["!mouseupright ([0-9\.]+)", Execution.relMouse, [ReParam(1), ReParam(1, f = Execution.negate)], {}],
-        ["!mousedownleft", Execution.relMouse, [ConfigParam("defaultDistance", f = Execution.negate), ConfigParam("defaultDistance")], {}],
-        ["!mousedownleft ([0-9\.]+)", Execution.relMouse, [ReParam(1, f = Execution.negate), ReParam(1)], {}],
-        ["!mousedownright", Execution.relMouse, [ConfigParam("defaultDistance"), ConfigParam("defaultDistance")], {}],
-        ["!mousedownright ([0-9\.]+)", Execution.relMouse, [ReParam(1), ReParam(1)], {}],
-        ["!boxupleft", Execution.box, [ConfigParam("defaultDistance", f = Execution.negate), ConfigParam("defaultDistance", f = Execution.negate)], {}],
-        ["!boxupleft ([0-9\.]+)", Execution.box, [ReParam(1, f = Execution.negate), ReParam(1, f = Execution.negate)], {}],
-        ["!boxupright", Execution.box, [ConfigParam("defaultDistance"), ConfigParam("defaultDistance", f = Execution.negate)], {}],
-        ["!boxupright ([0-9\.]+)", Execution.box, [ReParam(1), ReParam(1, f = Execution.negate)], {}],
-        ["!boxdownleft", Execution.box, [ConfigParam("defaultDistance", f = Execution.negate), ConfigParam("defaultDistance")], {}],
-        ["!boxdownleft ([0-9\.]+)", Execution.box, [ReParam(1, f = Execution.negate), ReParam(1)], {}],
-        ["!boxdownright", Execution.box, [ConfigParam("defaultDistance"), ConfigParam("defaultDistance")], {}],
-        ["!boxdownright ([0-9\.]+)", Execution.box, [ReParam(1), ReParam(1)], {}],
-    ]
+        ["!(?:movemouse|mouse) ([0-9\.]+) ([0-9\.]+)",      "moveMouse",        ["group[0]", "group[1]"],           {}],
+        ["!box (-?[0-9\.]+) (-?[0-9\.]+)",                  "box",              ["group[1]", "group[2]"],           {}],
+        ["!(?:click|leftclick)",                            "click",            [],                                 {}],
+        ["!rightclick",                                     "click",            [],                                 {"button" : "right"}],
+        ["!middleclick",                                    "click",            [],                                 {"button" : "middle"}],
+        ["!doubleclick",                                    "click",            [],                                 {"clicks" : 2}],
+        ["!mouseup",                                        "relMouse",         [0, "-config['defaultDistance']"],   {}],
+        ["!mouseup ([0-9\.]+)",                             "relMouse",         [0, "-group[1]"],                   {}],
+        ["!mousedown",                                      "relMouse",         [0, "config['defaultDistance']"],   {}],
+        ["!mousedown ([0-9\.]+)",                           "relMouse",         [0, "group[1]"],                    {}],
+        ["!mouseleft",                                      "relMouse",         ["-config['defaultDistance']", 0],  {}],
+        ["!mouseleft ([0-9\.]+)",                           "relMouse",         ["-group[1]", 0],                   {}],
+        ["!mouseright",                                     "relMouse",         ["config['defaultDistance']", 0],   {}],
+        ["!mouseright ([0-9\.]+)",                          "relMouse",         ["group[1]", 0],                    {}],
+        ["!mouseupleft",                                    "relMouse",         ["-config['defaultDistance']", "-config['defaultDistance']"], {}],
+        ["!mouseupleft ([0-9\.]+)",                         "relMouse",         ["-group[1]", "-group[1]"],         {}],
+        ["!mouseupright",                                   "relMouse",         ["config['defaultDistance']", "-config['defaultDistance']"], {}],
+        ["!mouseupright ([0-9\.]+)",                        "relMouse",         ["group[1]", "-group[1]"],          {}],
+        ["!mousedownleft",                                  "relMouse",         ["-config['defaultDistance']", "config['defaultDistance']"], {}],
+        ["!mousedownleft ([0-9\.]+)",                       "relMouse",         ["-group[1]", "group[1]"],          {}],
+        ["!mousedownright",                                 "relMouse",         ["config['defaultDistance']", "config['defaultDistance']"], {}],
+        ["!mousedownright ([0-9\.]+)",                      "relMouse",         ["group[1]", "group[1]"],           {}],
+        ["!boxupleft",                                      "box",              ["-config['defaultDistance']", "-config['defaultDistance']"], {}],
+        ["!boxupleft ([0-9\.]+)",                           "box",              ["-group[1]", "-group[1]"],         {}],
+        ["!boxupright",                                     "box",              ["config['defaultDistance']", "-config['defaultDistance']"], {}],
+        ["!boxupright ([0-9\.]+)",                          "box",              ["group[1]", "-group[1]"],          {}],
+        ["!boxdownleft",                                    "box",              ["-config['defaultDistance']", "config['defaultDistance']"], {}],
+        ["!boxdownleft ([0-9\.]+)",                         "box",              ["-group[1]", "group[1]"],          {}],
+        ["!boxdownright",                                   "box",              ["config['defaultDistance']", "config['defaultDistance']"], {}],
+        ["!boxdownright ([0-9\.]+)",                        "box",              ["group[1]", "group[1]"],           {}],
+]
 
