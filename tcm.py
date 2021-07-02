@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 import pyautogui as pg
 import time
-import socket
 import re
 import sys
 import os
 from queue import Queue
-import threading
 from appdirs import *
 import toml
 import pathlib
+from twitchirc import TwitchIrc
 
 appname = "TwitchPlaysRTS"
 appauthor = "TwitchPlaysRTS"
@@ -63,8 +62,6 @@ reBoxDownLeftCoord = re.compile("!boxdownleft ([0-9\.]+)")
 reBoxDownRight = re.compile("!boxdownright")
 reBoxDownRightCoord = re.compile("!boxdownright ([0-9\.]+)")
 reQuit = re.compile("!quittcm")
-
-commandQueue = Queue()
 
 screenWidth, screenHeight = pg.size()
 
@@ -123,54 +120,19 @@ def box(x, y):
     x, y = percentageToPixel(float(x), float(y))
     pg.dragRel(x, y, 0.5, pg.easeInOutQuad)
 
-def send(server, string):
-    server.send(bytes(string + '\r\n', 'utf-8'))
-    
-def runIrc():
-    connection_data = (config["irc"]["domain"], config["irc"]["port"])
-    server = socket.socket()
-    server.connect(connection_data)
-    send(server, 'PASS ' + config["credentials"]["oauth"])
-    send(server, 'NICK ' + config["credentials"]["username"])
-    send(server, 'JOIN #' + config["credentials"]["username"])
-    while(True):
-        try:
-            message = server.recv(2048).decode('utf-8')
-            if ("" == message):
-                print("Connection to twitch terminated")
-                server.close()
-                exit(0)
-
-            elif (config["irc"]["PING_MSG"][:4] == message[:4]):
-                print("twitch pinged")
-                print(repr(message))
-                send(server, config["irc"]["PONG_MSG"])
-            
-            else:
-                processChatMessage(message)
-
-        except Exception as error:
-            print("Error type: ", type(error))
-            print(error.args)
-
-def processChatMessage(message):
-    print(message)
-
-    match = reMessage.match(message)
-    if match != None:
-        commandQueue.put((time.time(), match.group(1), match.group(2)))
-
 def processCommandQueue():
     while(True):
         try:
-            epoch, sender, command = commandQueue.get()
+            epoch, sender, command = irc.commandQueue.get()
+            if sender == None:
+                errorOut(command)
             if epoch + config["execution"]["timeout"] >= time.time():
                 processCommand(config["credentials"]["username"], command)
         except:
             pass
 
 def processCommand(sender, message):
-    print("\"" + message + "\"")
+    print(sender + ": " + message)
     defaultDistance = config["execution"]["defaultDistance"]
     match = reMoveMouse.match(message)
     if match != None:
@@ -194,6 +156,7 @@ def processCommand(sender, message):
     match = reDoubleClick.match(message)
     if match != None:
         pg.doubleClick()
+
     match = reQuit.match(message)
     if match != None and sender == config["credentials"]["username"]:
         sys.exit(0)
@@ -311,10 +274,7 @@ def processCommand(sender, message):
 config = loadConfig()
 config = getCredentials(config)
 writeConfig(config)
+irc = TwitchIrc(config)
+irc.start()
 
-# TODO: Move this somewhere sensible
-reMessage = re.compile("([^\s]+)!.* PRIVMSG #" + config["credentials"]["username"] + " :(.*)")
-
-ircThread = threading.Thread(target = runIrc, daemon = True)
-ircThread.start()
 processCommandQueue()
