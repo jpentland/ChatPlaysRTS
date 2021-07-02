@@ -34,7 +34,7 @@ Commands:
 !doubleclick
 !quittcm
 
-Note: 
+Note:
 * !movemouse moves the mouse to an exact coordinate on the screen, which is a percentage of the screen size. So !movemouse 50 50 will move to the center of the screen.
 * !box will drag a box with a given size, starting from the current mouse position
 * !quittcm only works for the streamer
