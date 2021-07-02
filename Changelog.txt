@@ -1,7 +1,10 @@
 Version 0.7
 ------
-* User credentials are now stored in a config file. You will no longer need to edit the script to set them (see README.txt)
 * Renamed project to TwitchPlaysRTS
+* User credentials are now stored in a config file. You will no longer need to edit the script to set them (see README.txt)
+* Removed !quittcm (not working, just close the window)
+* Change !middlemouse to !middleclick
+* Also allow !leftclick as well as !click
 
 Version 0.6
 ------

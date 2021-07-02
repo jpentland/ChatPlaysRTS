@@ -34,15 +34,13 @@ Commands:
 !boxupright
 !boxdownleft
 !boxdownright
-!click
+!click or !leftclick
 !rightclick
-!middlemouse
+!middleclick
 !doubleclick
-!quittcm
 
 Note:
 * !movemouse moves the mouse to an exact coordinate on the screen, which is a percentage of the screen size. So !movemouse 50 50 will move to the center of the screen.
 * !box will drag a box with a given size, starting from the current mouse position
-* !quittcm only works for the streamer
 * The commands !mouseup, !mousedown, !boxdownleft, !boxupright etc can also take an optional distance.
 * The config file is located in: C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\config.toml, which stores credentials and other information.

@@ -1,6 +1,6 @@
 DONE * Move config to separate file stored in appropriate user config dir on windows/linux
-* Split IRC / command processing into separate files
-* Cleanup regex code to make it easier to add new commands
+DONE * Split IRC / command processing into separate files
+DONE * Cleanup regex code to make it easier to add new commands
 * Add GUI with basic config options (username/channel/password) and start/stop button
 * Better handling of errors such as authentication or connection failure
 * Ability to add new mouse commands via config file
@@ -10,3 +10,5 @@ DONE * Move config to separate file stored in appropriate user config dir on win
 * Ability to bind commands to keypresses via config file
 * All config file options also available in GUI
 * stop/start commands for owner
+* Handle multiple monitors
+* exe installer for windows
