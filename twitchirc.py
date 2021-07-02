@@ -15,7 +15,7 @@ class TwitchIrc(threading.Thread):
         self.port = config["irc"]["port"]
         self.PING_MSG = config["irc"]["PING_MSG"]
         self.PONG_MSG = config["irc"]["PONG_MSG"]
-        self.reMessage = re.compile("([^\s]+)!.* PRIVMSG #" + self.username + " :(.*)")
+        self.reMessage = re.compile(":([^\s]+)!.* PRIVMSG #" + self.channel + " :(.*)")
         self.commandQueue = Queue()
 
     def run(self):
@@ -55,5 +55,4 @@ class TwitchIrc(threading.Thread):
 
 
     def send(self, string):
-        print("SEND: " + string)
         self.server.send(bytes(string + '\r\n', 'utf-8'))
