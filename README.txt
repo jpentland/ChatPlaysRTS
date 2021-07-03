@@ -2,14 +2,10 @@
 Twitch Plays RTS
 -------
 
-Installing Python, and dependencies
+Installing Python
 --------------------------------------
 
 1. Download and install: https://www.python.org/ftp/python/3.9.6/python-3.9.6-amd64.exe
-2. Open run dialog with Win+R, type cmd, and press ok
-3. In the command prompt, type the command "py -m pip install pyautogui appdirs toml" and press return
-4. Wait for the installation
-4. Close the command prompt
 
 Running TPRTS
 -------------------------------------
