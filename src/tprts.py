@@ -13,7 +13,9 @@ from execution import Execution
 appname = "TwitchPlaysRTS"
 appauthor = "TwitchPlaysRTS"
 config_dir = user_data_dir(appname, appauthor)
-config_file_path = os.path.join(config_dir, "config.toml")
+config_file = "config.toml"
+commands_file = "commands.toml"
+defaultconf_dir = "defaultconf"
 
 defaultConfig = {
         "execution" : {
@@ -31,16 +33,35 @@ defaultConfig = {
 # Get contents of config file or defaultconfig if doesnt exist
 def loadConfig():
     try:
-        with open(config_file_path) as configFile:
+        with open(os.path.join(config_dir, config_file)) as configFile:
             content = configFile.read()
             return toml.loads(content)
     except FileNotFoundError:
         return defaultConfig
 
+# Get contents of command file, or create if doesn't exist
+def loadCommands():
+    try:
+        with open(os.path.join(config_dir, commands_file)) as commandsFile:
+            content = commandsFile.read()
+            return toml.loads(content)["command"]
+    except FileNotFoundError:
+        copyDefault(commands_file)
+        with open(os.path.join(defaultconf_dir, commands_file)) as commandsFile:
+            content = commandsFile.read()
+            return toml.loads(content)["command"]
+
+# Copy a default config to config dir
+def copyDefault(filename):
+    with open(os.path.join(defaultconf_dir, filename)) as defaultFile:
+        with open(os.path.join(config_dir, filename), "w") as newFile:
+            content = defaultFile.read()
+            newFile.write(content)
+
 # Write config to disk
 def writeConfig(config):
     pathlib.Path(config_dir).mkdir(parents=True, exist_ok=True)
-    with open(config_file_path, "w") as configFile:
+    with open(os.path.join(config_dir, config_file), "w") as configFile:
         toml.dump(config, configFile)
 
 # CLI: display error message, press any key to exit
@@ -63,9 +84,9 @@ def getCredentials(config):
     return config
 
 # Read commands from command queue
-def processCommandQueue(config):
+def processCommandQueue(config, commands):
 
-    execution = Execution(config)
+    execution = Execution(config, commands)
     while(True):
         epoch, sender, command = irc.commandQueue.get()
         print("%s: %s" % (sender, command))
@@ -81,4 +102,5 @@ writeConfig(config)
 irc = TwitchIrc(config)
 irc.start()
 
-processCommandQueue(config)
+commands = loadCommands()
+processCommandQueue(config, commands)

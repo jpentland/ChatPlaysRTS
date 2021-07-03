@@ -1,0 +1,285 @@
+# This file contains the list of commands that can be executed by viewers
+
+# Commands are specified with the following format:
+
+#   [[command]]
+#   regex = "regex"             # Regular expression to match the command typed in chat
+#   operation = "operation"     # operation to perform when command is detected
+
+#   [command.params]            # Parameters to operation
+#   param1 = value
+#   param2 = value
+
+# Parameters can be direct values, or expressions, which must be surrounded by braces: {}
+
+# E.g:
+#   [command.params]
+#   param1 = 5          # This is just the number 5
+#   param2 = "{4 + 9}"  # This will be calculated when running the program
+
+# regex groups can be created using brackets, (), and accessed in parameters by using group[number] in an expression.
+
+# E.g:
+#       [[command]]
+#       regex = "!mouse ([0-9\\.]+) ([0-9\\.]+)"
+#       operation = "moveMouse"
+
+#               [command.params]
+#               x = "{group[0]}"
+#               y = "{group[1]}"
+
+# Configuration parameters can also be accessed via the config dictionary, E.g:
+
+#       [command.params]
+#       x = "{config['defaultDistance']}"
+#       y = "{config['defaultDistance']}"
+
+# Configuration parameters are set in config.toml
+
+# Currently supported operations:
+# * moveMouse
+#       - Moves mouse to a fixed location
+#       - required parameters: x, y
+# * relmouse
+#       - Move the mouse a certain distance starting from current location
+#       - required parameters: x, y
+# * box
+#       - Drags a box starting from current mouse position
+#       - required parameters: x, y
+# * click
+#       - Click the mouse
+#       - optional parameters: button, clicks
+#       - required parameters: none
+
+[[command]]
+regex = "!(?:movemouse|mouse) ([0-9\\.]+) ([0-9\\.]+)"
+operation = "moveMouse"
+
+        [command.params]
+        x = "{group[0]}"
+        y = "{group[1]}"
+
+[[command]]
+regex = "!box (-?[0-9\\.]+) (-?[0-9\\.]+)"
+operation = "box"
+
+        [command.params]
+        x = "{group[0]}"
+        y = "{group[1]}"
+
+[[command]]
+regex = "!(?:click|leftclick)"
+operation = "click"
+
+[[command]]
+regex = "!rightclick"
+operation = "click"
+
+        [command.params]
+        button = "right"
+
+[[command]]
+regex = "!middleclick"
+operation = "click"
+
+        [command.params]
+        button = "middle"
+
+[[command]]
+regex = "!doubleclick"
+operation = "click"
+
+        [command.params]
+        clicks = 2
+
+[[command]]
+regex = "!mouseup"
+operation = "relMouse"
+
+        [command.params]
+        x = 0
+        y = "{-config['defaultDistance']}"
+
+[[command]]
+regex = "!mouseup ([0-9\\.]+)"
+operation = "relMouse"
+
+        [command.params]
+        x = 0
+        y = "{-group[0]}"
+
+[[command]]
+regex = "!mousedown"
+operation = "relMouse"
+
+        [command.params]
+        x = 0
+        y = "{config['defaultDistance']}"
+
+[[command]]
+regex = "!mousedown ([0-9\\.]+)"
+operation = "relMouse"
+
+        [command.params]
+        x = 0
+        y = "{group[0]}"
+
+[[command]]
+regex = "!mouseleft"
+operation = "relMouse"
+
+        [command.params]
+        x = "{-config['defaultDistance']}"
+        y = 0
+
+[[command]]
+regex = "!mouseleft ([0-9\\.]+)"
+operation = "relMouse"
+
+        [command.params]
+        x = "{-group[0]}"
+        y = 0
+
+[[command]]
+regex = "!mouseright"
+operation = "relMouse"
+
+        [command.params]
+        x = "{config['defaultDistance']}"
+        y = 0
+
+[[command]]
+regex = "!mouseright ([0-9\\.]+)"
+operation = "relMouse"
+
+        [command.params]
+        x = "{group[0]}"
+        y = 0
+
+[[command]]
+regex = "!mouseupleft"
+operation = "relMouse"
+
+        [command.params]
+        x = "{-config['defaultDistance']}"
+        y = "{-config['defaultDistance']}"
+
+[[command]]
+regex = "!mouseupleft ([0-9\\.]+)"
+operation = "relMouse"
+
+        [command.params]
+        x = "{-group[0]}"
+        y = "{-group[0]}"
+
+[[command]]
+regex = "!mouseupright"
+operation = "relMouse"
+
+        [command.params]
+        x = "{config['defaultDistance']}"
+        y = "{-config['defaultDistance']}"
+
+[[command]]
+regex = "!mouseupright ([0-9\\.]+)"
+operation = "relMouse"
+
+        [command.params]
+        x = "{group[0]}"
+        y = "{-group[0]}"
+
+[[command]]
+regex = "!mousedownleft"
+operation = "relMouse"
+
+        [command.params]
+        x = "{-config['defaultDistance']}"
+        y = "{config['defaultDistance']}"
+
+[[command]]
+regex = "!mousedownleft ([0-9\\.]+)"
+operation = "relMouse"
+
+        [command.params]
+        x = "{-group[0]}"
+        y = "{group[0]}"
+
+[[command]]
+regex = "!mousedownright"
+operation = "relMouse"
+
+        [command.params]
+        x = "{config['defaultDistance']}"
+        y = "{config['defaultDistance']}"
+
+[[command]]
+regex = "!mousedownright ([0-9\\.]+)"
+operation = "relMouse"
+
+        [command.params]
+        x = "{group[0]}"
+        y = "{group[0]}"
+
+[[command]]
+regex = "!boxupleft"
+operation = "box"
+
+        [command.params]
+        x = "{-config['defaultDistance']}"
+        y = "{-config['defaultDistance']}"
+
+[[command]]
+regex = "!boxupleft ([0-9\\.]+)"
+operation = "box"
+
+        [command.params]
+        x = "{-group[0]}"
+        y = "{-group[0]}"
+
+[[command]]
+regex = "!boxupright"
+operation = "box"
+
+        [command.params]
+        x = "{config['defaultDistance']}"
+        y = "{-config['defaultDistance']}"
+
+[[command]]
+regex = "!boxupright ([0-9\\.]+)"
+operation = "box"
+
+        [command.params]
+        x = "{group[0]}"
+        y = "{-group[0]}"
+
+[[command]]
+regex = "!boxdownleft"
+operation = "box"
+
+        [command.params]
+        x = "{-config['defaultDistance']}"
+        y = "{config['defaultDistance']}"
+
+[[command]]
+regex = "!boxdownleft ([0-9\\.]+)"
+operation = "box"
+
+        [command.params]
+        x = "{-group[0]}"
+        y = "{group[0]}"
+
+[[command]]
+regex = "!boxdownright"
+operation = "box"
+
+        [command.params]
+        x = "{config['defaultDistance']}"
+        y = "{config['defaultDistance']}"
+
+[[command]]
+regex = "!boxdownright ([0-9\\.]+)"
+operation = "box"
+
+        [command.params]
+        x = "{group[0]}"
+        y = "{group[0]}"

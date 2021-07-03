@@ -5,9 +5,9 @@ pg.PAUSE = 0
 pg.FAILSAFE=False
 
 class Execution():
-    def __init__(self, config):
+    def __init__(self, config, commands):
         self.config = config["execution"]
-        self.commands = self.compileCommands(defaultCommands)
+        self.commands = self.compileCommands(commands)
         self.screenWidth, self.screenHeight = pg.size()
         self.reEval = re.compile("^\s*{(.*)}\s*$")
 
@@ -25,8 +25,11 @@ class Execution():
             match = command["regex"].match(message)
             if match != None:
                 print("Matched message: %s" % message)
-                operation = self.parse_operation(command["command"])
-                kwargs = self.processArgs(command["params"], match)
+                operation = self.parse_operation(command["operation"])
+                try:
+                    kwargs = self.processArgs(command["params"], match)
+                except KeyError:
+                    kwargs = {}
                 operation(self, **kwargs)
 
     # Process args for execution of an incoming command at runtime
@@ -85,37 +88,3 @@ class Execution():
     # Parse function call and parameters as defined in command config
     def parse_operation(self, fstring):
         return self.operations[fstring.strip().lower()]
-
-defaultCommands = [
-        {"regex" : "!(?:movemouse|mouse) ([0-9\.]+) ([0-9\.]+)",      "command" : "moveMouse",        "params" : {"x" : "{group[0]}", "y" : "{group[1]}"}},
-        {"regex" : "!box (-?[0-9\.]+) (-?[0-9\.]+)",                  "command" : "box",              "params" : {"x" : "{group[0]}", "y" : "{group[1]}"}},
-        {"regex" : "!(?:click|leftclick)",                            "command" : "click",            "params" : {}},
-        {"regex" : "!rightclick",                                     "command" : "click",            "params" : {"button" : "right"}},
-        {"regex" : "!middleclick",                                    "command" : "click",            "params" : {"button" : "middle"}},
-        {"regex" : "!doubleclick",                                    "command" : "click",            "params" : {"clicks" : 2}},
-        {"regex" : "!mouseup",                                        "command" : "relMouse",         "params" : {"x" : 0, "y" : "{-config['defaultDistance']}"}},
-        {"regex" : "!mouseup ([0-9\.]+)",                             "command" : "relMouse",         "params" : {"x" : 0, "y" : "{-group[0]}"}},
-        {"regex" : "!mousedown",                                      "command" : "relMouse",         "params" : {"x" : 0, "y" : "{config['defaultDistance']}"}},
-        {"regex" : "!mousedown ([0-9\.]+)",                           "command" : "relMouse",         "params" : {"x" : 0, "y" : "{group[0]}"}},
-        {"regex" : "!mouseleft",                                      "command" : "relMouse",         "params" : {"x" : "{-config['defaultDistance']}", "y" : 0}},
-        {"regex" : "!mouseleft ([0-9\.]+)",                           "command" : "relMouse",         "params" : {"x" : "{-group[0]}", "y" : 0}},
-        {"regex" : "!mouseright",                                     "command" : "relMouse",         "params" : {"x" : "{config['defaultDistance']}", "y" : 0}},
-        {"regex" : "!mouseright ([0-9\.]+)",                          "command" : "relMouse",         "params" : {"x" : "{group[0]}", "y" : 0}},
-        {"regex" : "!mouseupleft",                                    "command" : "relMouse",         "params" : {"x" : "{-config['defaultDistance']}", "y" : "{-config['defaultDistance']}"}},
-        {"regex" : "!mouseupleft ([0-9\.]+)",                         "command" : "relMouse",         "params" : {"x" : "{-group[0]}", "y" : "{-group[0]}"}},
-        {"regex" : "!mouseupright",                                   "command" : "relMouse",         "params" : {"x" : "{config['defaultDistance']}", "y" : "{-config['defaultDistance']}"}},
-        {"regex" : "!mouseupright ([0-9\.]+)",                        "command" : "relMouse",         "params" : {"x" : "{group[0]}", "y" : "{-group[0]}"}},
-        {"regex" : "!mousedownleft",                                  "command" : "relMouse",         "params" : {"x" : "{-config['defaultDistance']}", "y" : "{config['defaultDistance']}"}},
-        {"regex" : "!mousedownleft ([0-9\.]+)",                       "command" : "relMouse",         "params" : {"x" : "{-group[0]}", "y" : "{group[0]}"}},
-        {"regex" : "!mousedownright",                                 "command" : "relMouse",         "params" : {"x" : "{config['defaultDistance']}", "y" : "{config['defaultDistance']}"}},
-        {"regex" : "!mousedownright ([0-9\.]+)",                      "command" : "relMouse",         "params" : {"x" : "{group[0]}", "y" : "{group[0]}"}},
-        {"regex" : "!boxupleft",                                      "command" : "box",              "params" : {"x" : "{-config['defaultDistance']}", "y" : "{-config['defaultDistance']}"}},
-        {"regex" : "!boxupleft ([0-9\.]+)",                           "command" : "box",              "params" : {"x" : "{-group[0]}", "y" : "{-group[0]}"}},
-        {"regex" : "!boxupright",                                     "command" : "box",              "params" : {"x" : "{config['defaultDistance']}", "y" : "{-config['defaultDistance']}"}},
-        {"regex" : "!boxupright ([0-9\.]+)",                          "command" : "box",              "params" : {"x" : "{group[0]}", "y" : "{-group[0]}"}},
-        {"regex" : "!boxdownleft",                                    "command" : "box",              "params" : {"x" : "{-config['defaultDistance']}", "y" : "{config['defaultDistance']}"}},
-        {"regex" : "!boxdownleft ([0-9\.]+)",                         "command" : "box",              "params" : {"x" : "{-group[0]}", "y" : "{group[0]}"}},
-        {"regex" : "!boxdownright",                                   "command" : "box",              "params" : {"x" : "{config['defaultDistance']}", "y" : "{config['defaultDistance']}"}},
-        {"regex" : "!boxdownright ([0-9\.]+)",                        "command" : "box",              "params" : {"x" : "{group[0]}", "y" : "{group[0]}"}},
-]
-
