@@ -59,10 +59,6 @@ class Execution():
 
         return commands
 
-    # Negate incoming parameter
-    def negate(self, a):
-        return -float(a)
-
     # Convert percentage coordinatre system to actual screen position
     def percentageToPixel(self, x, y):
         return self.screenWidth * (x/100), self.screenHeight * (y/100)
@@ -81,10 +77,6 @@ class Execution():
     def box(self, x, y):
         x, y = self.percentageToPixel(float(x), float(y))
         pg.dragRel(x, y, 0.5, pg.easeInOutQuad)
-
-    # Return same value that was passed in (no effect)
-    def unary(self, x):
-        return x
 
     # Call pg.click directly
     def click(self, *args, **kwargs):
