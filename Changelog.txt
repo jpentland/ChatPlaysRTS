@@ -4,6 +4,7 @@ Version 0.7
 * User credentials are now stored in a config file. You will no longer need to edit the script to set them (see README.txt)
 * Program can now be started by double-clicking START.bat
 * START.bat will install all python dependencies for you, so you don't have to
+* Custom commands can now be configured by editing the commands.toml file (see README.txt)
 * Removed !quittcm (not working, just close the window)
 * Change !middlemouse to !middleclick
 * Also allow !leftclick as well as !click

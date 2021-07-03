@@ -10,12 +10,19 @@ Installing Python
 Running TPRTS
 -------------------------------------
 1. Request an oauth code with this link https://twitchapps.com/tmi/ (don't leak this on stream)
-2. To start twitch controlling mouse, double click tprts.py
+2. To start twitch controlling mouse, double click START.bat
 3. If this is the first time running the program, you will be asked for your twitch username and oauth. You can paste by just right-clicking in the command prompt. Press enter to continue.
-4. To stop, close the command prompt that opens, or use command !quittcm
+4. To stop, close the command prompt that opens
 5. If something doesnt work, screenshot the command prompt and send to sharperguy
 
-Commands:
+Custom Commmands
+-------------------------------------
+* Custom commands can be configured by editing the commands.toml file. This gets created the first time you run the program.
+* The file also contains instructions on how to create new commands.
+* The file should be located at: C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\commands.toml
+
+Default Commands:
+-------------------------------------
 !movemouse X Y or !mouse X Y
 !mouseup
 !mousedown
