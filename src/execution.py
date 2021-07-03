@@ -9,6 +9,7 @@ class Execution():
         self.config = config["execution"]
         self.commands = self.compileCommands(defaultCommands)
         self.screenWidth, self.screenHeight = pg.size()
+        self.reEval = re.compile("^\s*{(.*)}\s*$")
 
         self.operations = {
             "movemouse" : Execution.moveMouse,
@@ -25,12 +26,12 @@ class Execution():
             if match != None:
                 print("Matched message: %s" % message)
                 operation = self.parse_operation(command[1])
-                args = self.processArgs(command[2], match)
-                operation(self, *args, **command[3])
+                kwargs = self.processArgs(command[2], match)
+                operation(self, **kwargs)
 
     # Process args for execution of an incoming command at runtime
-    def processArgs(self, args, match):
-        newArgs = []
+    def processArgs(self, kwargs, match):
+        newkwArgs = {}
         group = []
         config = self.config
 
@@ -41,11 +42,14 @@ class Execution():
             except ValueError:
                 group.append(g)
 
-        # Evaluate all args as python code
-        for arg in args:
-            newArgs.append(eval(str(arg)))
+        # Evaluate all args contained in {} as python code
+        for k, arg in kwargs.items():
+            try:
+                newkwArgs[k] = eval(self.reEval.match(str(arg)).group(1))
+            except AttributeError:
+                newkwArgs[k] = arg
 
-        return newArgs
+        return newkwArgs
 
     # Compile regex for all commands before main program start
     def compileCommands(self, commands):
@@ -91,35 +95,35 @@ class Execution():
         return self.operations[fstring.strip().lower()]
 
 defaultCommands = [
-        ["!(?:movemouse|mouse) ([0-9\.]+) ([0-9\.]+)",      "moveMouse",        ["group[0]", "group[1]"],           {}],
-        ["!box (-?[0-9\.]+) (-?[0-9\.]+)",                  "box",              ["group[1]", "group[2]"],           {}],
-        ["!(?:click|leftclick)",                            "click",            [],                                 {}],
-        ["!rightclick",                                     "click",            [],                                 {"button" : "right"}],
-        ["!middleclick",                                    "click",            [],                                 {"button" : "middle"}],
-        ["!doubleclick",                                    "click",            [],                                 {"clicks" : 2}],
-        ["!mouseup",                                        "relMouse",         [0, "-config['defaultDistance']"],   {}],
-        ["!mouseup ([0-9\.]+)",                             "relMouse",         [0, "-group[1]"],                   {}],
-        ["!mousedown",                                      "relMouse",         [0, "config['defaultDistance']"],   {}],
-        ["!mousedown ([0-9\.]+)",                           "relMouse",         [0, "group[1]"],                    {}],
-        ["!mouseleft",                                      "relMouse",         ["-config['defaultDistance']", 0],  {}],
-        ["!mouseleft ([0-9\.]+)",                           "relMouse",         ["-group[1]", 0],                   {}],
-        ["!mouseright",                                     "relMouse",         ["config['defaultDistance']", 0],   {}],
-        ["!mouseright ([0-9\.]+)",                          "relMouse",         ["group[1]", 0],                    {}],
-        ["!mouseupleft",                                    "relMouse",         ["-config['defaultDistance']", "-config['defaultDistance']"], {}],
-        ["!mouseupleft ([0-9\.]+)",                         "relMouse",         ["-group[1]", "-group[1]"],         {}],
-        ["!mouseupright",                                   "relMouse",         ["config['defaultDistance']", "-config['defaultDistance']"], {}],
-        ["!mouseupright ([0-9\.]+)",                        "relMouse",         ["group[1]", "-group[1]"],          {}],
-        ["!mousedownleft",                                  "relMouse",         ["-config['defaultDistance']", "config['defaultDistance']"], {}],
-        ["!mousedownleft ([0-9\.]+)",                       "relMouse",         ["-group[1]", "group[1]"],          {}],
-        ["!mousedownright",                                 "relMouse",         ["config['defaultDistance']", "config['defaultDistance']"], {}],
-        ["!mousedownright ([0-9\.]+)",                      "relMouse",         ["group[1]", "group[1]"],           {}],
-        ["!boxupleft",                                      "box",              ["-config['defaultDistance']", "-config['defaultDistance']"], {}],
-        ["!boxupleft ([0-9\.]+)",                           "box",              ["-group[1]", "-group[1]"],         {}],
-        ["!boxupright",                                     "box",              ["config['defaultDistance']", "-config['defaultDistance']"], {}],
-        ["!boxupright ([0-9\.]+)",                          "box",              ["group[1]", "-group[1]"],          {}],
-        ["!boxdownleft",                                    "box",              ["-config['defaultDistance']", "config['defaultDistance']"], {}],
-        ["!boxdownleft ([0-9\.]+)",                         "box",              ["-group[1]", "group[1]"],          {}],
-        ["!boxdownright",                                   "box",              ["config['defaultDistance']", "config['defaultDistance']"], {}],
-        ["!boxdownright ([0-9\.]+)",                        "box",              ["group[1]", "group[1]"],           {}],
+        ["!(?:movemouse|mouse) ([0-9\.]+) ([0-9\.]+)",      "moveMouse",        {"x" : "{group[0]}", "y" : "{group[1]}"}],
+        ["!box (-?[0-9\.]+) (-?[0-9\.]+)",                  "box",              {"x" : "{group[0]}", "y" : "{group[1]}"}],
+        ["!(?:click|leftclick)",                            "click",            {}],
+        ["!rightclick",                                     "click",            {"button" : "right"}],
+        ["!middleclick",                                    "click",            {"button" : "middle"}],
+        ["!doubleclick",                                    "click",            {"clicks" : 2}],
+        ["!mouseup",                                        "relMouse",         {"x" : 0, "y" : "{-config['defaultDistance']}"}],
+        ["!mouseup ([0-9\.]+)",                             "relMouse",         {"x" : 0, "y" : "{-group[0]}"}],
+        ["!mousedown",                                      "relMouse",         {"x" : 0, "y" : "{config['defaultDistance']}"}],
+        ["!mousedown ([0-9\.]+)",                           "relMouse",         {"x" : 0, "y" : "{group[0]}"}],
+        ["!mouseleft",                                      "relMouse",         {"x" : "{-config['defaultDistance']}", "y" : 0}],
+        ["!mouseleft ([0-9\.]+)",                           "relMouse",         {"x" : "{-group[0]}", "y" : 0}],
+        ["!mouseright",                                     "relMouse",         {"x" : "{config['defaultDistance']}", "y" : 0}],
+        ["!mouseright ([0-9\.]+)",                          "relMouse",         {"x" : "{group[0]}", "y" : 0}],
+        ["!mouseupleft",                                    "relMouse",         {"x" : "{-config['defaultDistance']}", "y" : "{-config['defaultDistance']}"}],
+        ["!mouseupleft ([0-9\.]+)",                         "relMouse",         {"x" : "{-group[0]}", "y" : "{-group[0]}"}],
+        ["!mouseupright",                                   "relMouse",         {"x" : "{config['defaultDistance']}", "y" : "{-config['defaultDistance']}"}],
+        ["!mouseupright ([0-9\.]+)",                        "relMouse",         {"x" : "{group[0]}", "y" : "{-group[0]}"}],
+        ["!mousedownleft",                                  "relMouse",         {"x" : "{-config['defaultDistance']}", "y" : "{config['defaultDistance']}"}],
+        ["!mousedownleft ([0-9\.]+)",                       "relMouse",         {"x" : "{-group[0]}", "y" : "{group[0]}"}],
+        ["!mousedownright",                                 "relMouse",         {"x" : "{config['defaultDistance']}", "y" : "{config['defaultDistance']}"}],
+        ["!mousedownright ([0-9\.]+)",                      "relMouse",         {"x" : "{group[0]}", "y" : "{group[0]}"}],
+        ["!boxupleft",                                      "box",              {"x" : "{-config['defaultDistance']}", "y" : "{-config['defaultDistance']}"}],
+        ["!boxupleft ([0-9\.]+)",                           "box",              {"x" : "{-group[0]}", "y" : "{-group[0]}"}],
+        ["!boxupright",                                     "box",              {"x" : "{config['defaultDistance']}", "y" : "{-config['defaultDistance']}"}],
+        ["!boxupright ([0-9\.]+)",                          "box",              {"x" : "{group[0]}", "y" : "{-group[0]}"}],
+        ["!boxdownleft",                                    "box",              {"x" : "{-config['defaultDistance']}", "y" : "{config['defaultDistance']}"}],
+        ["!boxdownleft ([0-9\.]+)",                         "box",              {"x" : "{-group[0]}", "y" : "{group[0]}"}],
+        ["!boxdownright",                                   "box",              {"x" : "{config['defaultDistance']}", "y" : "{config['defaultDistance']}"}],
+        ["!boxdownright ([0-9\.]+)",                        "box",              {"x" : "{group[0]}", "y" : "{group[0]}"}],
 ]
 
