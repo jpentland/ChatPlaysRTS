@@ -16,6 +16,7 @@ class Execution():
             "click" : Execution.click,
             "relmouse" : Execution.relMouse,
             "box" : Execution.box,
+            "presskey" : Execution.pressKey
         }
 
     # Process an incoming command at runtime
@@ -88,4 +89,20 @@ class Execution():
     # Call pg.click directly
     def click(self, *args, **kwargs):
         pg.click(*args, **kwargs)
+
+    # Allow pressing a key
+    def pressKey(self, key, shift = False, ctrl = False, alt = False):
+        mods = zip([ctrl, alt, shift], ["ctrl", "alt","shift"])
+        for on, mod in mods:
+            if on:
+                print("Keydown %s" % mod)
+                pg.keyDown(mod)
+
+        print("presskey %s" % key)
+        pg.press(key)
+
+        for on, mod in mods:
+            if on:
+                print("Keyup %s" % mod)
+                pg.keyUp(mod)
 
