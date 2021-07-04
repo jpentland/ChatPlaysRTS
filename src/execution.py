@@ -91,7 +91,7 @@ class Execution():
         pg.click(*args, **kwargs)
 
     # Allow pressing a key
-    def pressKey(self, key, shift = False, ctrl = False, alt = False):
+    def pressKey(self, key, shift = False, ctrl = False, alt = False, **kwargs):
         mods = zip([ctrl, alt, shift], ["ctrl", "alt","shift"])
         for on, mod in mods:
             if on:
@@ -99,7 +99,7 @@ class Execution():
                 pg.keyDown(mod)
 
         print("presskey %s" % key)
-        pg.press(key)
+        pg.press(key, **kwargs)
 
         for on, mod in mods:
             if on:
