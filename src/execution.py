@@ -1,5 +1,6 @@
 import pyautogui as pg
 import re
+import time
 
 pg.PAUSE = 0
 pg.FAILSAFE=False
@@ -51,7 +52,10 @@ class Execution():
             try:
                 newkwArgs[k] = eval(self.reEval.match(str(arg)).group(1))
             except AttributeError:
-                newkwArgs[k] = arg
+                try:
+                    newkwArgs[k] = float(arg)
+                except (ValueError, TypeError):
+                    newkwArgs[k] = arg
 
         return newkwArgs
 
@@ -91,18 +95,30 @@ class Execution():
         pg.click(*args, **kwargs)
 
     # Allow pressing a key
-    def pressKey(self, key, shift = False, ctrl = False, alt = False, **kwargs):
+    def pressKey(self, key, shift = False, ctrl = False, alt = False, duration = 0, maxduration = -1):
+
+        # Used to prevent viewers from specifying very large durations
+        if maxduration != -1 and maxduration < duration:
+            duration = maxduration
+
         mods = zip([ctrl, alt, shift], ["ctrl", "alt","shift"])
         for on, mod in mods:
             if on:
-                print("Keydown %s" % mod)
                 pg.keyDown(mod)
 
-        print("presskey %s" % key)
-        pg.press(key, **kwargs)
+        if type(key) is list:
+            for k in key:
+                pg.keyDown(k)
+            if duration > 0:
+                time.sleep(duration)
+            for k in key:
+                pg.keyUp(k)
+        else:
+            pg.keyDown(key)
+            time.sleep(duration)
+            pg.keyUp(key)
 
         for on, mod in mods:
             if on:
-                print("Keyup %s" % mod)
                 pg.keyUp(mod)
 
