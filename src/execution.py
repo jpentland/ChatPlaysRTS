@@ -62,6 +62,10 @@ class Execution():
 
         return commands
 
+    # Parse function call and parameters as defined in command config
+    def parse_operation(self, fstring):
+        return self.operations[fstring.strip().lower()]
+
     # Convert percentage coordinatre system to actual screen position
     def percentageToPixel(self, x, y):
         return self.screenWidth * (x/100), self.screenHeight * (y/100)
@@ -85,6 +89,3 @@ class Execution():
     def click(self, *args, **kwargs):
         pg.click(*args, **kwargs)
 
-    # Parse function call and parameters as defined in command config
-    def parse_operation(self, fstring):
-        return self.operations[fstring.strip().lower()]
