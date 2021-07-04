@@ -283,3 +283,139 @@ operation = "box"
         [command.params]
         x = "{group[0]}"
         y = "{group[0]}"
+
+[[command]]
+regex = "!north"
+operation = "presskey"
+
+	[command.params]
+	key = "up"
+	duration = "0.4"
+
+[[command]]
+regex = "!east"
+operation = "presskey"
+
+	[command.params]
+	key = "right"
+	duration = "0.4"
+
+[[command]]
+regex = "!west"
+operation = "presskey"
+
+	[command.params]
+	key = "left"
+	duration = "0.4"
+
+[[command]]
+regex = "!south"
+operation = "presskey"
+
+	[command.params]
+	key = "down"
+	duration = "0.4"
+
+[[command]]
+regex = "!northeast"
+operation = "presskey"
+
+	[command.params]
+	key = ["up", "right"]
+	duration = "0.4"
+
+[[command]]
+regex = "!northwest"
+operation = "presskey"
+
+	[command.params]
+	key = ["up", "left"]
+	duration = "0.4"
+
+[[command]]
+regex = "!southeast"
+operation = "presskey"
+
+	[command.params]
+	key = ["down", "right"]
+	duration = "0.4"
+
+[[command]]
+regex = "!southwest"
+operation = "presskey"
+
+	[command.params]
+	key = ["down", "left"]
+	duration = "0.4"
+
+[[command]]
+regex = "!north ([0-9]+)"
+operation = "presskey"
+
+	[command.params]
+	key = "up"
+	duration = "{group[0] / 100}"
+	maxduration = "1"
+
+[[command]]
+regex = "!east ([0-9]+)"
+operation = "presskey"
+
+	[command.params]
+	key = "right"
+	duration = "{group[0] / 100}"
+	maxduration = "1"
+
+[[command]]
+regex = "!west ([0-9]+)"
+operation = "presskey"
+
+	[command.params]
+	key = "left"
+	duration = "{group[0] / 100}"
+	maxduration = "1"
+
+[[command]]
+regex = "!south ([0-9]+)"
+operation = "presskey"
+
+	[command.params]
+	key = "down"
+	duration = "{group[0] / 100}"
+	maxduration = "1"
+
+[[command]]
+regex = "!northeast ([0-9]+)"
+operation = "presskey"
+
+	[command.params]
+	key = ["up", "right"]
+	duration = "{group[0] / 100}"
+	maxduration = "1"
+
+[[command]]
+regex = "!northwest ([0-9]+)"
+operation = "presskey"
+
+	[command.params]
+	key = ["up", "left"]
+	duration = "{group[0] / 100}"
+	maxduration = "1"
+
+[[command]]
+regex = "!southeast ([0-9]+)"
+operation = "presskey"
+
+	[command.params]
+	key = ["down", "right"]
+	duration = "{group[0] / 100}"
+	maxduration = "1"
+
+[[command]]
+regex = "!southwest ([0-9]+)"
+operation = "presskey"
+
+	[command.params]
+	key = ["down", "left"]
+	duration = "{group[0] / 100}"
+	maxduration = "1"
