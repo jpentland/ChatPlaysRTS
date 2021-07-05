@@ -50,6 +50,18 @@
 #       - Click the mouse
 #       - optional parameters: button, clicks
 #       - required parameters: none
+# * presskey
+#       - Press a key
+#       - Required parameters
+#               - key: Can either be a key name, or list of key names to be pressed simultaneously#                     E.g: key = "left", press left
+#                          key = ["left", "up"], press left and up at the same time
+#
+#               PROTIP: For a list of all possible keys, see keys.txt
+#
+#       - Optional parameters:
+#               - shift = true, hold down shift while pressing key
+#               - alt = true, hold down shift while pressing key
+#               - ctrl = true, hold down shift while pressing key
 
 [[command]]
 regex = "!(?:movemouse|mouse) ([0-9\\.]+) ([0-9\\.]+)"
