@@ -19,7 +19,7 @@ defaultconf_dir = "defaultconf"
 
 defaultConfig = {
         "execution" : {
-            "timeout" : 2,
+            "timeout" : 10,
             "defaultDistance" : 10
         },
         "irc" : {
