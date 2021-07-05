@@ -5,6 +5,8 @@ Version 0.7
 * Program can now be started by double-clicking START.bat
 * START.bat will install all python dependencies for you, so you don't have to
 * Custom commands can now be configured by editing the commands.toml file (see README.txt)
+* Ability to set commands to press keys on the keyboard
+* Commands will be skipped if the execution is more than 10 seconds behind incoming commands (spam protection)
 * Removed !quittcm (not working, just close the window)
 * Change !middlemouse to !middleclick
 * Also allow !leftclick as well as !click

@@ -7,7 +7,7 @@ DONE * Ability to add new mouse commands via config file
         - E.g. move mouse to predefined locations
 * Ability to set up restricted areas where the mouse cannot be moved via command
 * Ability to sync VIP/moderators to restrict commands to them
-* Ability to bind commands to keypresses via config file
+DONE * Ability to bind commands to keypresses via config file
 * All config file options also available in GUI
 * stop/start commands for owner
 * Handle multiple monitors
