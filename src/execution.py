@@ -17,6 +17,7 @@ class Execution():
             "click" : Execution.click,
             "relmouse" : Execution.relMouse,
             "box" : Execution.box,
+            "relbox" : Execution.relBox,
             "presskey" : Execution.pressKey
         }
 
@@ -85,10 +86,16 @@ class Execution():
         x, y = self.percentageToPixel(float(x), float(y))
         pg.moveRel(x, y, 0.5, pg.easeInOutQuad)
 
-    # Draw a box relatively
+    # Draw a box to target position on screen
     def box(self, x, y):
         x, y = self.percentageToPixel(float(x), float(y))
-        pg.dragRel(x, y, 0.5, pg.easeInOutQuad)
+        pg.dragTo(x, y, 0.5, pg.easeInOutQuad)
+
+    # Make box relatively
+    def relBox(self, dx, dy):
+        dx, dy = self.percentageToPixel(float(x), float(y))
+        x, y = pg.position()
+        self.box(self, x + dx, y + dy)
 
     # Call pg.click directly
     def click(self, *args, **kwargs):

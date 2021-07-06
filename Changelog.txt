@@ -1,3 +1,7 @@
+Version 0.8
+------
+* !box command now goes to a position on the screen, instead of giving the size
+
 Version 0.7
 ------
 * Renamed project to TwitchPlaysRTS
