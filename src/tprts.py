@@ -105,6 +105,7 @@ def processCommandQueue(config, commands):
     reStop = re.compile("^!stopcontrol\s*$")
     timeout = config["execution"]["timeout"]
     on = True
+    irc.sendMessage("Chat control has started!")
     while(True):
         epoch, sender, command = irc.commandQueue.get()
         print("%s: %s" % (sender, command))
