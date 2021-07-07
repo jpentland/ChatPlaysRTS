@@ -142,5 +142,7 @@ while True:
         print(e)
         if time.time() - lastError < 10:
             print("Program keeps crashing, please restart")
+            break
+        lastError = time.time()
 
 errorOut("Quitting")
