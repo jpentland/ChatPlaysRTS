@@ -116,4 +116,8 @@ irc = TwitchIrc(config)
 irc.start()
 
 commands = loadCommands()
-processCommandQueue(config, commands)
+while True:
+    try:
+        processCommandQueue(config, commands)
+    except:
+        pass
