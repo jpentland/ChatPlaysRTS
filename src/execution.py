@@ -6,13 +6,20 @@ pg.PAUSE = 0
 pg.FAILSAFE=False
 
 class Execution():
-    def __init__(self, config, commands, log):
+    def __init__(self, config, commands, irc, log):
         self.config = config["execution"]
         self.commands = self.compileCommands(commands)
         self.screenWidth, self.screenHeight = pg.size()
         self.reEval = re.compile("^\s*{(.*)}\s*$")
         self.lastClick = 0
         self.log = log
+        self.commandQueue = irc.commandQueue
+        self.irc = irc
+        self.reStart = re.compile("^!startcontrol\s*$")
+        self.reStop = re.compile("^!stopcontrol\s*$")
+        self.timeout = self.config["timeout"]
+        self.owner = config["credentials"]["username"]
+        self.on = False
 
         self.operations = {
             "movemouse" : Execution.moveMouse,
@@ -36,6 +43,35 @@ class Execution():
                 except KeyError:
                     kwargs = {}
                 operation(self, **kwargs)
+
+
+    # Read commands from command queue
+    def processCommandQueue(self):
+
+        self.on = True
+        self.irc.sendMessage("Chat control has started!")
+
+        while(True):
+            epoch, sender, command = self.commandQueue.get()
+            if sender == None:
+                raise Exception(command)
+
+            if sender == self.owner:
+                match = self.reStart.match(command)
+                if match:
+                    self.irc.sendMessage("Chat control has started!")
+                    self.on = True
+                match = self.reStop.match(command)
+                if match:
+                    self.irc.sendMessage("Chat control has stopped!")
+                    self.on = False
+
+            if self.on:
+                age = time.time() - epoch
+                if age < self.timeout:
+                    self.processCommand(command)
+                else:
+                    log.log("Skipped a command, took too long to come in (%d seconds)" % age)
 
     # Process args for execution of an incoming command at runtime
     def processArgs(self, kwargs, match):

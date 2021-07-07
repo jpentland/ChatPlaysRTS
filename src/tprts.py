@@ -102,37 +102,6 @@ def getCredentials(config):
 
     return config
 
-# Read commands from command queue
-def processCommandQueue(config, commands):
-
-    execution = Execution(config, commands, log)
-    reStart = re.compile("^!startcontrol\s*$")
-    reStop = re.compile("^!stopcontrol\s*$")
-    timeout = config["execution"]["timeout"]
-    on = True
-    irc.sendMessage("Chat control has started!")
-    while(True):
-        epoch, sender, command = irc.commandQueue.get()
-        if sender == None:
-            errorOut(command)
-            return
-
-        if sender == config["credentials"]["username"]:
-            match = reStart.match(command)
-            if match:
-                irc.sendMessage("Chat control has started!")
-                on = True
-            match = reStop.match(command)
-            if match:
-                irc.sendMessage("Chat control has stopped!")
-                on = False
-
-        if on:
-            age = time.time() - epoch
-            if age < timeout:
-                execution.processCommand(command)
-            else:
-                log.log("Skipped a command, took too long to come in (%d seconds)" % age)
 
 config = loadConfig()
 config = getCredentials(config)
@@ -159,9 +128,10 @@ while triesLeft > 0:
 lastError = 0
 
 commands = loadCommands()
+execution = Execution(config, commands, irc, log)
 while True:
     try:
-        processCommandQueue(config, commands)
+        execution.processCommandQueue()
     except Exception as e:
         log.log_exception(e)
         if time.time() - lastError < 10:
