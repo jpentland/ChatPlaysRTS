@@ -22,6 +22,7 @@ defaultConfig = {
             "timeout" : 10,
             "defaultDistance" : 10,
             "mouseBorder" : 11,
+            "clickRateLimit" : 0.5,
         },
         "irc" : {
             "domain" : "irc.chat.twitch.tv",

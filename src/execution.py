@@ -11,6 +11,7 @@ class Execution():
         self.commands = self.compileCommands(commands)
         self.screenWidth, self.screenHeight = pg.size()
         self.reEval = re.compile("^\s*{(.*)}\s*$")
+        self.lastClick = 0
 
         self.operations = {
             "movemouse" : Execution.moveMouse,
@@ -116,7 +117,14 @@ class Execution():
 
     # Call pg.click directly
     def click(self, *args, **kwargs):
+        timeDifference = time.time() - self.lastClick
+
+        if timeDifference < self.config["clickRateLimit"]:
+            print("Sleeping to prevent doubleclick")
+            time.sleep(self.config["clickRateLimit"] - timeDifference)
+
         pg.click(*args, **kwargs)
+        self.lastClick = time.time()
 
     # Allow pressing a key
     def pressKey(self, key, shift = False, ctrl = False, alt = False, duration = 0, maxduration = -1):
