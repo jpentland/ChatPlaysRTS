@@ -23,18 +23,39 @@ class TwitchIrc(threading.Thread):
         print(send)
         self.send(send)
 
-    def run(self):
+    def start(self):
         connection_data = (self.domain, self.port)
-        self.server = socket.socket()
-        self.server.connect(connection_data)
-        self.send('PASS ' + self.oauth)
-        self.send('NICK ' + self.username)
-        self.send('JOIN ' + self.channel)
+        try:
+            print("Server: %s:%d" % (self.domain, self.port))
+            print("Username: " + self.username)
+            print("Channel: " + self.channel)
+            print("Connecting...")
+            self.server = socket.socket()
+            self.server.connect(connection_data)
+            self.send('PASS ' + self.oauth)
+            self.send('NICK ' + self.username)
+            self.send('JOIN ' + self.channel)
+            while True:
+                message = self.server.recv(2048).decode('utf-8')
+                if len(message) == 0:
+                    print("Connection failed")
+                    raise Exception("connection failed")
+
+                for msg in message.split("\n"):
+                    regex = ":[^ ]+ [0-9]+ " + self.username + " " + self.channel + " :End of /NAMES list"
+                    if re.match(regex, msg):
+                        print("Connected")
+                        threading.Thread.start(self)
+                        return
+        except:
+            raise Exception("Connection failed")
+            return False
+
+    def run(self):
 
         while True:
             try:
                 message = self.server.recv(2048).decode('utf-8')
-                print(message)
                 if len(message) == 0:
                     print("Connection to twitch terminated")
                     self.commandQueue.put((time.time(), None, "Disconnected"))
@@ -49,7 +70,10 @@ class TwitchIrc(threading.Thread):
                 else:
                     match = self.reMessage.match(message)
                     if match != None:
+                        print("%s: %s" % (match.group(1), match.group(2)))
                         self.commandQueue.put((time.time(), match.group(1), match.group(2)))
+                    else:
+                        print(message)
 
             except Exception as error:
                 print("Error type: ", type(error))
