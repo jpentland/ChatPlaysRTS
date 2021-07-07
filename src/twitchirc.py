@@ -9,14 +9,19 @@ class TwitchIrc(threading.Thread):
     def __init__(self, config):
         threading.Thread.__init__(self)
         self.username = config["credentials"]["username"]
-        self.channel = config["credentials"]["username"]
+        self.channel = "#" + config["credentials"]["username"]
         self.oauth = config["credentials"]["oauth"]
         self.domain = config["irc"]["domain"]
         self.port = config["irc"]["port"]
         self.PING_MSG = config["irc"]["PING_MSG"]
         self.PONG_MSG = config["irc"]["PONG_MSG"]
-        self.reMessage = re.compile(":([^\s]+)!.* PRIVMSG #" + self.channel + " :(.*)")
+        self.reMessage = re.compile(":([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
         self.commandQueue = Queue()
+
+    def sendMessage(self, message):
+        send = "PRIVMSG " + self.channel + " :" + message
+        print(send)
+        self.send(send)
 
     def run(self):
         connection_data = (self.domain, self.port)
@@ -24,7 +29,7 @@ class TwitchIrc(threading.Thread):
         self.server.connect(connection_data)
         self.send('PASS ' + self.oauth)
         self.send('NICK ' + self.username)
-        self.send('JOIN #' + self.channel)
+        self.send('JOIN ' + self.channel)
 
         while True:
             try:
