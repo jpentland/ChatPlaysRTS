@@ -133,10 +133,15 @@ config = getCredentials(config)
 writeConfig(config)
 irc = TwitchIrc(config)
 irc.start()
+lastError = 0
 
 commands = loadCommands()
 while True:
     try:
         processCommandQueue(config, commands)
-    except:
-        pass
+    except Exception as e:
+        print(e)
+        if time.time() - lastError < 10:
+            print("Program keeps crashing, please restart")
+
+errorOut("Quitting")
