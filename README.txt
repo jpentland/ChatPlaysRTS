@@ -12,8 +12,10 @@ Running TPRTS
 1. Request an oauth code with this link https://twitchapps.com/tmi/ (don't leak this on stream)
 2. To start the program, double click START.bat
 3. If this is the first time running the program, you will be asked for your twitch username and oauth. You can paste by just right-clicking in the command prompt. Press enter to continue.
-4. To start chat control, type the command !startcontrol in chat
-5. To stop, type the command !stopcontrol
+4. Chat control will be started
+
+* To temporarily stop chat control, type the command !stopcontrol in chat
+* To restart chat control, type the command !startcontrol
 
 Custom Commmands
 -------------------------------------
