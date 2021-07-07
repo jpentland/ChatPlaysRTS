@@ -7,7 +7,7 @@ from queue import Queue
 from appdirs import *
 import toml
 import pathlib
-from twitchirc import TwitchIrc
+from twitchirc import TwitchIrc, AuthenticationError
 from execution import Execution
 from log import Log
 
@@ -144,11 +144,15 @@ while triesLeft > 0:
     try:
         irc.start()
         break
+    except AuthenticationError:
+        errorOut("Invalid username or oauth")
+        break
     except Exception as e:
         if triesLeft == 1:
             log.log_exception(e)
             errorOut("Failed to connect to server")
         else:
+            triesLeft -= 1
             log.log("retrying...")
 
 

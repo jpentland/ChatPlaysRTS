@@ -4,6 +4,10 @@ import time
 import re
 from queue import Queue
 
+class AuthenticationError(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 class TwitchIrc(threading.Thread):
 
     def __init__(self, config, log):
@@ -26,32 +30,30 @@ class TwitchIrc(threading.Thread):
 
     def start(self):
         connection_data = (self.domain, self.port)
-        try:
-            self.log.log("Server: %s:%d" % (self.domain, self.port))
-            self.log.log("Username: " + self.username)
-            self.log.log("Channel: " + self.channel)
-            self.log.log("Connecting...")
-            self.server = socket.socket()
-            self.server.connect(connection_data)
-            self.send('PASS ' + self.oauth)
-            self.send('NICK ' + self.username)
-            self.send('JOIN ' + self.channel)
-            while True:
-                message = self.server.recv(2048).decode('utf-8')
-                if len(message) == 0:
-                    self.log.log("Connection failed")
-                    raise Exception("connection failed")
+        self.log.log("Server: %s:%d" % (self.domain, self.port))
+        self.log.log("Username: " + self.username)
+        self.log.log("Channel: " + self.channel)
+        self.log.log("Connecting...")
+        self.server = socket.socket()
+        self.server.connect(connection_data)
+        self.send('PASS ' + self.oauth)
+        self.send('NICK ' + self.username)
+        self.send('JOIN ' + self.channel)
+        while True:
+            message = self.server.recv(2048).decode('utf-8')
+            if len(message) == 0:
+                raise Exception("connection failed")
 
-                for msg in message.split("\n"):
-                    regex = ":[^ ]+ [0-9]+ " + self.username + " " + self.channel + " :End of /NAMES list"
-                    if re.match(regex, msg):
-                        self.log.log("Connected")
-                        threading.Thread.start(self)
-                        return
-        except Exception as e:
-            self.log_exception(e)
-            self.log.log("Connection failed")
-            raise Exception("Connection failed")
+            for msg in message.split("\n"):
+                regex = ":[^ ]+ [0-9]+ " + self.username + " " + self.channel + " :End of /NAMES list"
+                if re.match(regex, msg):
+                    self.log.log("Connected")
+                    threading.Thread.start(self)
+                    return
+
+                regex = ".*Login authentication failed"
+                if re.match(regex, msg.strip()):
+                    raise AuthenticationError()
 
     def run(self):
 
