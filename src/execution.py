@@ -76,26 +76,43 @@ class Execution():
     def percentageToPixel(self, x, y):
         return self.screenWidth * (x/100), self.screenHeight * (y/100)
 
+    def keepInsideBorder(self, x, y):
+        if x < self.config["mouseBorder"]:
+            x = self.config["mouseBorder"]
+        if x > self.screenWidth - self.config["mouseBorder"]:
+            x = self.screenWidth - self.config["mouseBorder"]
+        if y < self.config["mouseBorder"]:
+            y = self.config["mouseBorder"]
+        if y > self.screenHeight - self.config["mouseBorder"]:
+            y = self.screenHeight - self.config["mouseBorder"]
+
+        return x, y
+
     # Move mouse to location on screen
     def moveMouse(self, x, y):
         x, y = self.percentageToPixel(float(x), float(y))
+        x, y = self.keepInsideBorder(x, y)
         pg.moveTo(x, y, 0.5, pg.easeInOutQuad)
 
     # Move mouse relatively
     def relMouse(self, x, y):
         x, y = self.percentageToPixel(float(x), float(y))
-        pg.moveRel(x, y, 0.5, pg.easeInOutQuad)
+        px, py = pg.position()
+        tx, ty = self.keepInsideBorder(px + x, py + y)
+        pg.moveTo(tx, ty, 0.5, pg.easeInOutQuad)
 
     # Draw a box to target position on screen
     def box(self, x, y):
         x, y = self.percentageToPixel(float(x), float(y))
+        x, y = self.keepInsideBorder(x, y)
         pg.dragTo(x, y, 0.5, pg.easeInOutQuad)
 
     # Make box relatively
     def relBox(self, dx, dy):
         dx, dy = self.percentageToPixel(float(x), float(y))
         x, y = pg.position()
-        self.box(self, x + dx, y + dy)
+        tx, ty = self.keepInsideBorder(px + x, py + y)
+        pg.dragTo(tx, ty, 0.5, pg.easeInOutQuad)
 
     # Call pg.click directly
     def click(self, *args, **kwargs):

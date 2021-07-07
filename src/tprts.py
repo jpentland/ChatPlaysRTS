@@ -20,7 +20,8 @@ defaultconf_dir = "defaultconf"
 defaultConfig = {
         "execution" : {
             "timeout" : 10,
-            "defaultDistance" : 10
+            "defaultDistance" : 10,
+            "mouseBorder" : 11,
         },
         "irc" : {
             "domain" : "irc.chat.twitch.tv",

@@ -48,6 +48,7 @@ Default Commands:
 
 Note:
 * !movemouse moves the mouse to an exact coordinate on the screen, which is a percentage of the screen size. So !movemouse 50 50 will move to the center of the screen.
+* Mouse movement commands won't move the mouse all the way to the edge of the screen, to prevent accidental scrolling.
 * !box will drag a box from the current mouse position, to the given position on screen.
 * The commands !mouseup, !mousedown, !boxdownleft, !boxupright etc can also take an optional distance.
 * The config file is located in: C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\config.toml, which stores credentials and other information.

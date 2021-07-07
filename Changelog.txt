@@ -1,6 +1,8 @@
 Version 0.8
 ------
 * !box command now goes to a position on the screen, instead of giving the size
+* Mouse has been blocked from moving too close to the edge of the screen, to
+prevent accidental scrolling (mouseBorder config option).
 
 Version 0.7
 ------
