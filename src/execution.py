@@ -28,7 +28,7 @@ class Execution():
         for command in self.commands:
             match = command["regex"].match(message)
             if match != None:
-                print("Matched message: %s" % message)
+                print("Got command: %s" % message)
                 operation = self.parse_operation(command["operation"])
                 try:
                     kwargs = self.processArgs(command["params"], match)
