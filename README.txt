@@ -10,10 +10,10 @@ Installing Python
 Running TPRTS
 -------------------------------------
 1. Request an oauth code with this link https://twitchapps.com/tmi/ (don't leak this on stream)
-2. To start twitch controlling mouse, double click START.bat
+2. To start the program, double click START.bat
 3. If this is the first time running the program, you will be asked for your twitch username and oauth. You can paste by just right-clicking in the command prompt. Press enter to continue.
-4. To stop, close the command prompt that opens
-5. If something doesnt work, screenshot the command prompt and send to sharperguy
+4. To start chat control, type the command !startcontrol in chat
+5. To stop, type the command !stopcontrol
 
 Custom Commmands
 -------------------------------------
@@ -49,6 +49,6 @@ Default Commands:
 Note:
 * !movemouse moves the mouse to an exact coordinate on the screen, which is a percentage of the screen size. So !movemouse 50 50 will move to the center of the screen.
 * Mouse movement commands won't move the mouse all the way to the edge of the screen, to prevent accidental scrolling.
-* !box will drag a box from the current mouse position, to the given position on screen.
+* The !startcontrol and !stopcontrol commands only work for the streamer
 * The commands !mouseup, !mousedown, !boxdownleft, !boxupright etc can also take an optional distance.
 * The config file is located in: C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\config.toml, which stores credentials and other information.

@@ -4,7 +4,7 @@ DONE * Cleanup regex code to make it easier to add new commands
 * Prevent accidental double clicks
 * Add a wizard for setting up new keybindings
 DONE Prevent moving to edge of the screen
-* Start/Stop commands for streamer
+DONE Start/Stop commands for streamer
 * Split commands.toml to commands.toml and defaultcommands.toml
 * Add GUI with basic config options (username/channel/password) and start/stop button
 * Better handling of errors such as authentication or connection failure

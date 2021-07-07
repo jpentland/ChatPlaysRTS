@@ -3,6 +3,8 @@ Version 0.8
 * !box command now goes to a position on the screen, instead of giving the size
 * Mouse has been blocked from moving too close to the edge of the screen, to
 prevent accidental scrolling (mouseBorder config option).
+* Controls must now be stopped/started with !startcontrol and !stopcontrol
+commands
 
 Version 0.7
 ------
