@@ -108,7 +108,6 @@ def processCommandQueue(config, commands):
     irc.sendMessage("Chat control has started!")
     while(True):
         epoch, sender, command = irc.commandQueue.get()
-        print("%s: %s" % (sender, command))
         if sender == None:
             errorOut(command)
             return
