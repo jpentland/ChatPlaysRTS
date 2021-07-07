@@ -1,7 +1,7 @@
 DONE * Move config to separate file stored in appropriate user config dir on windows/linux
 DONE * Split IRC / command processing into separate files
 DONE * Cleanup regex code to make it easier to add new commands
-* Prevent accidental double clicks
+DONE * Prevent accidental double clicks
 * Add a wizard for setting up new keybindings
 DONE Prevent moving to edge of the screen
 DONE Start/Stop commands for streamer

@@ -5,6 +5,8 @@ Version 0.8
 prevent accidental scrolling (mouseBorder config option).
 * Controls can now be stopped/started with !startcontrol and !stopcontrol
 commands
+* !click is now rate limited to prevent accidental doubleclicks, for a double
+click, use !doubleclick
 
 Version 0.7
 ------
