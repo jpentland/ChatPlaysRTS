@@ -138,8 +138,20 @@ config = loadConfig()
 config = getCredentials(config)
 log = Log(config["log"])
 writeConfig(config)
-irc = TwitchIrc(config)
-irc.start()
+irc = TwitchIrc(config, log)
+triesLeft = 5
+while triesLeft > 0:
+    try:
+        irc.start()
+        break
+    except Exception as e:
+        if triesLeft == 1:
+            log.log_exception(e)
+            errorOut("Failed to connect to server")
+        else:
+            log.log("retrying...")
+
+
 lastError = 0
 
 commands = loadCommands()
