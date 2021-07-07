@@ -36,7 +36,19 @@ def loadConfig():
     try:
         with open(os.path.join(config_dir, config_file)) as configFile:
             content = configFile.read()
-            return toml.loads(content)
+            config = toml.loads(content)
+
+            # Copy any missing default config options
+            for k, v in defaultConfig.items():
+                for ki, vi in v.items():
+                    if k in config:
+                        if ki not in config[k]:
+                            config[k][ki] = vi
+                    else:
+                        config[k] = v
+
+            return config
+
     except FileNotFoundError:
         return defaultConfig
 
