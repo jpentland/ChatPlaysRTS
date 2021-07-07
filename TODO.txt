@@ -15,6 +15,5 @@ DONE * Ability to add new mouse commands via config file
 * Ability to sync VIP/moderators to restrict commands to them
 DONE * Ability to bind commands to keypresses via config file
 * All config file options also available in GUI
-* stop/start commands for owner
 * Handle multiple monitors
 * exe installer for windows
