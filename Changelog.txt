@@ -7,6 +7,9 @@ prevent accidental scrolling (mouseBorder config option).
 commands
 * !click is now rate limited to prevent accidental doubleclicks, for a double
 click, use !doubleclick
+* Improvements of messages on screen to be more understandable
+* All messages are now logged to the output.log file, which can be sent to
+developers to help them fix problems.
 
 Version 0.7
 ------

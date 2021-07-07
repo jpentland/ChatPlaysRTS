@@ -54,3 +54,4 @@ Note:
 * The !startcontrol and !stopcontrol commands only work for the streamer
 * The commands !mouseup, !mousedown, !boxdownleft, !boxupright etc can also take an optional distance.
 * The config file is located in: C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\config.toml, which stores credentials and other information.
+* If you have any problems, please send the output.log file to a developer.
