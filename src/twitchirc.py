@@ -6,7 +6,7 @@ from queue import Queue
 
 class TwitchIrc(threading.Thread):
 
-    def __init__(self, config):
+    def __init__(self, config, log):
         threading.Thread.__init__(self)
         self.username = config["credentials"]["username"]
         self.channel = "#" + config["credentials"]["username"]
@@ -17,19 +17,20 @@ class TwitchIrc(threading.Thread):
         self.PONG_MSG = config["irc"]["PONG_MSG"]
         self.reMessage = re.compile(":([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
         self.commandQueue = Queue()
+        self.log = log
 
     def sendMessage(self, message):
         send = "PRIVMSG " + self.channel + " :" + message
-        print(send)
+        self.log.log("Sending: " + message)
         self.send(send)
 
     def start(self):
         connection_data = (self.domain, self.port)
         try:
-            print("Server: %s:%d" % (self.domain, self.port))
-            print("Username: " + self.username)
-            print("Channel: " + self.channel)
-            print("Connecting...")
+            self.log.log("Server: %s:%d" % (self.domain, self.port))
+            self.log.log("Username: " + self.username)
+            self.log.log("Channel: " + self.channel)
+            self.log.log("Connecting...")
             self.server = socket.socket()
             self.server.connect(connection_data)
             self.send('PASS ' + self.oauth)
@@ -38,18 +39,19 @@ class TwitchIrc(threading.Thread):
             while True:
                 message = self.server.recv(2048).decode('utf-8')
                 if len(message) == 0:
-                    print("Connection failed")
+                    self.log.log("Connection failed")
                     raise Exception("connection failed")
 
                 for msg in message.split("\n"):
                     regex = ":[^ ]+ [0-9]+ " + self.username + " " + self.channel + " :End of /NAMES list"
                     if re.match(regex, msg):
-                        print("Connected")
+                        self.log.log("Connected")
                         threading.Thread.start(self)
                         return
-        except:
+        except Exception as e:
+            self.log_exception(e)
+            self.log.log("Connection failed")
             raise Exception("Connection failed")
-            return False
 
     def run(self):
 
@@ -57,27 +59,26 @@ class TwitchIrc(threading.Thread):
             try:
                 message = self.server.recv(2048).decode('utf-8')
                 if len(message) == 0:
-                    print("Connection to twitch terminated")
+                    self.log.log("Connection to twitch terminated")
                     self.commandQueue.put((time.time(), None, "Disconnected"))
                     self.server.close()
                     return
 
                 elif (self.PING_MSG[:4] == message[:4]):
-                    print("twitch pinged")
-                    print(repr(message))
+                    self.log.log("Responding to PING")
+                    self.log.log(repr(message))
                     self.send(self.PONG_MSG)
 
                 else:
                     match = self.reMessage.match(message)
                     if match != None:
-                        print("%s: %s" % (match.group(1), match.group(2)))
+                        self.log.log("%s: %s" % (match.group(1), match.group(2)))
                         self.commandQueue.put((time.time(), match.group(1), match.group(2)))
                     else:
-                        print(message)
+                        self.log.log(message)
 
             except Exception as error:
-                print("Error type: ", type(error))
-                print(error.args)
+                self.log.log(e)
                 self.commandQueue.put((time.time(), None, error.args))
                 self.server.close()
                 return

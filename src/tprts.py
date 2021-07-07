@@ -9,6 +9,7 @@ import toml
 import pathlib
 from twitchirc import TwitchIrc
 from execution import Execution
+from log import Log
 
 appname = "TwitchPlaysRTS"
 appauthor = "TwitchPlaysRTS"
@@ -29,6 +30,10 @@ defaultConfig = {
             "port" : 6667,
             "PING_MSG" : "PING :tmi.twitch.tv",
             "PONG_MSG" : "PONG :tmi.twitch.tv"
+        },
+        "log": {
+            "echo" : True,
+            "logfile" : "output.log",
         }
 }
 
@@ -80,7 +85,7 @@ def writeConfig(config):
 
 # CLI: display error message, press any key to exit
 def errorOut(msg):
-    print(msg)
+    log.log(msg)
     input("Press RETURN to exit\n")
     sys.exit(1)
 
@@ -100,7 +105,7 @@ def getCredentials(config):
 # Read commands from command queue
 def processCommandQueue(config, commands):
 
-    execution = Execution(config, commands)
+    execution = Execution(config, commands, log)
     reStart = re.compile("^!startcontrol\s*$")
     reStop = re.compile("^!stopcontrol\s*$")
     timeout = config["execution"]["timeout"]
@@ -127,10 +132,11 @@ def processCommandQueue(config, commands):
             if age < timeout:
                 execution.processCommand(command)
             else:
-                print("Skipped a command, took too long to come in (%d seconds)" % age)
+                log.log("Skipped a command, took too long to come in (%d seconds)" % age)
 
 config = loadConfig()
 config = getCredentials(config)
+log = Log(config["log"])
 writeConfig(config)
 irc = TwitchIrc(config)
 irc.start()
@@ -141,9 +147,9 @@ while True:
     try:
         processCommandQueue(config, commands)
     except Exception as e:
-        print(e)
+        log.log_exception(e)
         if time.time() - lastError < 10:
-            print("Program keeps crashing, please restart")
+            log.log("Program keeps crashing, please restart")
             break
         lastError = time.time()
 

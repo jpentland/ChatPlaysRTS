@@ -6,12 +6,13 @@ pg.PAUSE = 0
 pg.FAILSAFE=False
 
 class Execution():
-    def __init__(self, config, commands):
+    def __init__(self, config, commands, log):
         self.config = config["execution"]
         self.commands = self.compileCommands(commands)
         self.screenWidth, self.screenHeight = pg.size()
         self.reEval = re.compile("^\s*{(.*)}\s*$")
         self.lastClick = 0
+        self.log = log
 
         self.operations = {
             "movemouse" : Execution.moveMouse,
@@ -28,7 +29,7 @@ class Execution():
         for command in self.commands:
             match = command["regex"].match(message)
             if match != None:
-                print("Got command: %s" % message)
+                self.log.log("Got command: %s" % message)
                 operation = self.parse_operation(command["operation"])
                 try:
                     kwargs = self.processArgs(command["params"], match)
@@ -120,7 +121,7 @@ class Execution():
         timeDifference = time.time() - self.lastClick
 
         if timeDifference < self.config["clickRateLimit"]:
-            print("Sleeping to prevent doubleclick")
+            self.log.log("Sleeping to prevent doubleclick")
             time.sleep(self.config["clickRateLimit"] - timeDifference)
 
         pg.click(*args, **kwargs)
