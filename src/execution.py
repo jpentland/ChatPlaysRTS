@@ -56,9 +56,12 @@ class Execution():
                 newkwArgs[k] = eval(self.reEval.match(str(arg)).group(1))
             except AttributeError:
                 try:
-                    newkwArgs[k] = float(arg)
+                    newkwArgs[k] = int(arg)
                 except (ValueError, TypeError):
-                    newkwArgs[k] = arg
+                    try:
+                        newkwArgs[k] = float(arg)
+                    except (ValueError, TypeError):
+                        newkwArgs[k] = arg
 
         return newkwArgs
 
