@@ -103,6 +103,7 @@ def processCommandQueue(config, commands):
     execution = Execution(config, commands)
     reStart = re.compile("^!startcontrol\s*$")
     reStop = re.compile("^!stopcontrol\s*$")
+    timeout = config["execution"]["timeout"]
     on = True
     while(True):
         epoch, sender, command = irc.commandQueue.get()
@@ -122,10 +123,11 @@ def processCommandQueue(config, commands):
                 on = False
 
         if on:
-            if epoch + config["execution"]["timeout"] >= time.time():
+            age = time.time() - epoch
+            if age < timeout:
                 execution.processCommand(command)
             else:
-                print("Skipped a command, took too long to come in")
+                print("Skipped a command, took too long to come in (%d seconds)" % age)
 
 config = loadConfig()
 config = getCredentials(config)
