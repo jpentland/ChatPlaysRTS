@@ -16,7 +16,7 @@ appauthor = "TwitchPlaysRTS"
 config_dir = user_data_dir(appname, appauthor)
 config_file = "config.toml"
 commands_file = "commands.toml"
-user_commands_file = "usercomands.toml"
+user_commands_file = "usercommands.toml"
 defaultconf_dir = "defaultconf"
 
 defaultConfig = {
