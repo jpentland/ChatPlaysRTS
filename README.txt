@@ -19,8 +19,7 @@ Running TPRTS
 
 Custom Commmands
 -------------------------------------
-* Custom commands can be configured by editing the commands.toml file. This gets created the first time you run the program.
-* The file also contains instructions on how to create new commands.
+* Custom commands can be configured by creating a user_commands.toml in the app directory.
 * The file should be located at: C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\commands.toml
 
 Default Commands:
@@ -47,6 +46,10 @@ Default Commands:
 !south
 !east
 !west
+!northeast
+!northwest
+!southeast
+!southwest
 
 Note:
 * !movemouse moves the mouse to an exact coordinate on the screen, which is a percentage of the screen size. So !movemouse 50 50 will move to the center of the screen.

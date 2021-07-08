@@ -10,6 +10,8 @@ click, use !doubleclick
 * Improvements of messages on screen to be more understandable
 * All messages are now logged to the output.log file, which can be sent to
 developers to help them fix problems.
+* commands.toml is now user_commands.toml and contains only custom user
+commands rather than default commands
 
 Version 0.7
 ------

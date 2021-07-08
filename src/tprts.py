@@ -16,6 +16,7 @@ appauthor = "TwitchPlaysRTS"
 config_dir = user_data_dir(appname, appauthor)
 config_file = "config.toml"
 commands_file = "commands.toml"
+user_commands_file = "usercomands.toml"
 defaultconf_dir = "defaultconf"
 
 defaultConfig = {
@@ -58,24 +59,56 @@ def loadConfig():
     except FileNotFoundError:
         return defaultConfig
 
-# Get contents of command file, or create if doesn't exist
+# Return combined default commands and user commands
 def loadCommands():
-    try:
-        with open(os.path.join(config_dir, commands_file)) as commandsFile:
-            content = commandsFile.read()
-            return toml.loads(content)["command"]
-    except FileNotFoundError:
-        copyDefault(commands_file)
-        with open(os.path.join(defaultconf_dir, commands_file)) as commandsFile:
-            content = commandsFile.read()
-            return toml.loads(content)["command"]
+    commands = []
 
-# Copy a default config to config dir
-def copyDefault(filename):
-    with open(os.path.join(defaultconf_dir, filename)) as defaultFile:
-        with open(os.path.join(config_dir, filename), "w") as newFile:
-            content = defaultFile.read()
-            newFile.write(content)
+    if os.path.isfile(os.path.join(config_dir, commands_file)):
+        migrateOldCommands()
+
+    with open(os.path.join(defaultconf_dir, commands_file)) as commandsFile:
+            content = commandsFile.read()
+            defaultCommands = toml.loads(content)["command"]
+            commands += defaultCommands
+    try:
+        with open(os.path.join(config_dir, user_commands_file)) as commandsFile:
+            content = commandsFile.read()
+            userCommands = toml.loads(content)["command"]
+            commands += userCommands
+    except FileNotFoundError:
+        log.log("No user commands file found")
+
+    return commands
+
+# Migrate old commands file (pre v0.8)
+def migrateOldCommands():
+    defaultCommands = []
+    oldCommands = []
+    newCommands = []
+
+    with open(os.path.join(defaultconf_dir, commands_file)) as commandsFile:
+            content = commandsFile.read()
+            defaultCommands += toml.loads(content)["command"]
+
+    with open(os.path.join(config_dir, commands_file)) as commandsFile:
+            content = commandsFile.read()
+            oldCommands += toml.loads(content)["command"]
+
+    # Import any non-default commands in commands.toml to user_commands.toml
+    for command in oldCommands:
+        try:
+            next(filter(lambda x : x["regex"] == command["regex"], defaultCommands))
+        except StopIteration:
+            newCommands.append(command)
+
+    if len(newCommands) > 0:
+        with open(os.path.join(config_dir, user_commands_file), "w") as commandsFile:
+            toml.dump({"command" : newCommands}, commandsFile)
+
+        log.log("Migrated %d commands from old commands.toml to new user_commands.toml" % len(newCommands))
+
+    log.log("Deleting old " + commands_file)
+    os.remove(os.path.join(config_dir, commands_file))
 
 # Write config to disk
 def writeConfig(config):
