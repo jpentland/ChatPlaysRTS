@@ -19,8 +19,9 @@ Running TPRTS
 
 Custom Commmands
 -------------------------------------
-* Custom commands can be configured by creating a user_commands.toml in the app directory.
-* The file should be located at: C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\commands.toml
+* Custom commands can be configured by creating a usercommands.toml in the app directory.
+* The file should be located at: C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\usercommands.toml
+* For more information, see Commands.txt in the doc directory
 
 Default Commands:
 -------------------------------------

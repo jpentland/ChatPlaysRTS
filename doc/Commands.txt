@@ -1,0 +1,151 @@
+--------------------------
+Creating your own commands
+-------------------------
+
+User-defined commands can be created by editing to user_commands.toml file.
+
+To start, create a new text file called "usercommands.toml" in this directory:
+
+C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\
+
+This directory should already exist, if you have run the program at least once.
+
+--------------
+Basic commands
+--------------
+
+If you just want to add some basic commands, without using fancy regex features, here are some examples. To use these, just copy-paste them into the usercommands.toml file and edit to your needs.
+
+* Moving the mouse to a predefined location:
+
+[[command]]
+regex = "!centermouse"
+operation = "movemouse"
+
+[command.params]
+x = "50"
+y = "50"
+
+* Pressing a key (for a list of all possible keys, see keys.txt)
+
+[[command]]
+regex = "!towncenter"
+operation = "presskey"
+
+[command.params]
+key = "h"
+
+* Pressing a key and holding shift (also works with alt and ctrl)
+
+[[command]]
+regex = "!allidles"
+operation = "presskey"
+
+[command.params]
+key = "."
+shift = true
+
+* Pressing two keys at once
+
+[[command]]
+regex = "!leftup"
+operation = "presskey"
+
+[command.params]
+key = ["left", "up"]
+
+* Holding down a key (duration is in seconds)
+
+[[command]]
+regex = "!north"
+operation = "presskey"
+
+[command.params]
+key = "up"
+duration = "1"
+
+-----------------------
+Command structure
+-----------------------
+
+A command in the "usercommands.toml" file looks like this:
+
+[[command]]
+regex = "regex"
+operation = "operation"
+
+[command.params]
+param1 = value
+param2 = value
+
+There are three main parts:
+
+* Regex
+        - The regex is the command itself, which viewers should type in chat.
+        This regular expression can also contain special characters for finding parameters such as numbers which can be typed by the viewers. Some examples would be "!click" or "!mouseup ([0-9]+)"
+
+* Operation
+        - This is the operation that gets performed when the command is triggered by players. Several operations are available, and are listed lower down in this document.
+
+* Parameters
+        - Parameters are specific to each operation, and can be mandatory or optional. An example or a parameter would be the coordinates that the mouse should move to, for a mouseMouse operation.
+
+----------
+Operations
+----------
+
+Currently supported operations:
+* moveMouse
+      - Moves mouse to a fixed location
+      - required parameters: x, y
+* relmouse
+      - Move the mouse a certain distance starting from current location
+      - required parameters: x, y
+* box
+      - Drags a box starting from current mouse position
+      - required parameters: x, y
+* click
+      - Click the mouse
+      - optional parameters: button, clicks
+      - required parameters: none
+* presskey
+      - Press a key
+      - Required parameters
+              - key: Can either be a key name, or list of key names to be pressed simultaneously#                     E.g: key = "left", press left
+                         key = ["left", "up"], press left and up at the same time
+
+              PROTIP: For a list of all possible keys, see keys.txt
+
+      - Optional parameters:
+              - shift = true, hold down shift while pressing key
+              - alt = true, hold down shift while pressing key
+              - ctrl = true, hold down shift while pressing key
+
+------------
+Parameters
+------------
+
+Parameters can be direct values, or expressions, which must be surrounded by braces: {}
+
+E.g:
+[command.params]
+param1 = 5          # This is just the number 5
+param2 = "{4 + 9}"  # This will be calculated when running the program
+
+Regex groups can be created using brackets, (), and accessed in parameters by using group[number] in an expression.
+
+E.g:
+[[command]]
+regex = "!mouse ([0-9\\.]+) ([0-9\\.]+)"
+operation = "moveMouse"
+
+[command.params]
+x = "{group[0]}"
+y = "{group[1]}"
+
+Configuration parameters can also be accessed via the config dictionary, E.g:
+
+[command.params]
+x = "{config['defaultDistance']}"
+y = "{config['defaultDistance']}"
+
