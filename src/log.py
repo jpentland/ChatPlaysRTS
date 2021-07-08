@@ -1,13 +1,16 @@
 from threading import Lock
 from time import localtime, strftime
 import traceback as tb
+import pathlib
+import os
 
 class Log():
     def __init__(self, config):
         self.echo = config["echo"]
         self.logfile_path = config["logfile"]
+        pathlib.Path("log").mkdir(parents=True, exist_ok=True)
         try:
-            self.logfile = open(self.logfile_path, "a")
+            self.logfile = open(os.path.join("log", self.logfile_path), "a")
         except Exception as e:
             print(e)
             print("Failed to open logfile")
