@@ -74,6 +74,7 @@ def loadCommands():
         with open(os.path.join(config_dir, user_commands_file)) as commandsFile:
             content = commandsFile.read()
             userCommands = toml.loads(content)["command"]
+            log.log("Loaded %d custom commands from %s" % (len(userCommands), user_commands_file))
             commands += userCommands
     except FileNotFoundError:
         log.log("No user commands file found")
