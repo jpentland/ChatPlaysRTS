@@ -71,7 +71,7 @@ class Execution():
                 if age < self.timeout:
                     self.processCommand(command)
                 else:
-                    log.log("Skipped a command, took too long to come in (%d seconds)" % age)
+                    self.log.log("Skipped a command, took too long to come in (%d seconds)" % age)
 
     # Process args for execution of an incoming command at runtime
     def processArgs(self, kwargs, match):
