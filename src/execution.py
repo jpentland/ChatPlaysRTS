@@ -149,9 +149,9 @@ class Execution():
         pg.dragTo(x, y, 0.5, pg.easeInOutQuad)
 
     # Make box relatively
-    def relBox(self, dx, dy):
-        dx, dy = self.percentageToPixel(float(x), float(y))
-        x, y = pg.position()
+    def relBox(self, x, y):
+        x, y = self.percentageToPixel(float(x), float(y))
+        px, py = pg.position()
         tx, ty = self.keepInsideBorder(px + x, py + y)
         pg.dragTo(tx, ty, 0.5, pg.easeInOutQuad)
 
