@@ -1,6 +1,7 @@
 import toml
 import pathlib
 from appdirs import *
+from error import *
 
 defaultConfig = {
         "execution" : {
@@ -38,7 +39,11 @@ class Config:
         try:
             with open(os.path.join(self.config_dir, self.config_file)) as configFile:
                 content = configFile.read()
-                config = toml.loads(content)
+                try:
+                    config = toml.loads(content)
+                except toml.decoder.TomlDecodeError as e:
+                    print("Failed to read %s" % self.config_file)
+                    raise TomlError(e)
 
                 # Copy any missing default config options
                 for k, v in defaultConfig.items():

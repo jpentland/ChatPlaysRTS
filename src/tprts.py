@@ -34,7 +34,13 @@ def getCredentials(config):
     return config
 
 def main():
-    config = Config(appname, appauthor)
+    try:
+        config = Config(appname, appauthor)
+    except TomlError as e:
+        print(str(e))
+        errorOut(None, "Failed to load config")
+        return
+
     config = getCredentials(config)
     log = Log(config["log"])
     config.write()
