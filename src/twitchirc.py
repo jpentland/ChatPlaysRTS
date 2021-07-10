@@ -8,6 +8,10 @@ class AuthenticationError(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+class ConnectionFailedError(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
 class TwitchIrc(threading.Thread):
 
     def __init__(self, config, log):
@@ -27,6 +31,22 @@ class TwitchIrc(threading.Thread):
         send = "PRIVMSG " + self.channel + " :" + message
         self.log.log("Sending: " + message)
         self.send(send)
+
+    def connect(self, tries):
+        triesLeft = tries
+        while triesLeft > 0:
+            try:
+                self.start()
+                break
+            except AuthenticationError as e:
+                raise e
+            except Exception as e:
+                if triesLeft == 1:
+                    self.log.log_exception(e)
+                    raise ConnectionFailedError()
+                else:
+                    triesLeft -= 1
+                    self.log.log("retrying...")
 
     def start(self):
         connection_data = (self.domain, self.port)

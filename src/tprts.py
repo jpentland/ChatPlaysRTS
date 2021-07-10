@@ -7,7 +7,7 @@ from queue import Queue
 from appdirs import *
 import toml
 import pathlib
-from twitchirc import TwitchIrc, AuthenticationError
+from twitchirc import TwitchIrc, AuthenticationError, ConnectionFailedError
 from execution import Execution
 from log import Log
 
@@ -136,41 +136,33 @@ def getCredentials(config):
 
     return config
 
-
-config = loadConfig()
-config = getCredentials(config)
-log = Log(config["log"])
-writeConfig(config)
-irc = TwitchIrc(config, log)
-triesLeft = 5
-while triesLeft > 0:
+if __name__ == "__main__":
+    config = loadConfig()
+    config = getCredentials(config)
+    log = Log(config["log"])
+    writeConfig(config)
+    irc = TwitchIrc(config, log)
     try:
-        irc.start()
-        break
+        irc.connect(5)
     except AuthenticationError:
         errorOut("Invalid username or oauth")
-        break
-    except Exception as e:
-        if triesLeft == 1:
-            log.log_exception(e)
-            errorOut("Failed to connect to server")
-        else:
-            triesLeft -= 1
-            log.log("retrying...")
-
-
-lastError = 0
-
-commands = loadCommands()
-execution = Execution(config, commands, irc, log)
-while True:
-    try:
-        execution.processCommandQueue()
-    except Exception as e:
+    except ConnectionFailedError:
+        errorOut("Failed to connect to Twitch")
+    except Exception:
         log.log_exception(e)
-        if time.time() - lastError < 10:
-            log.log("Program keeps crashing, please restart")
-            break
-        lastError = time.time()
+        errorOut("Failed to connect to Twitch")
 
-errorOut("Quitting")
+    lastError = 0
+    commands = loadCommands()
+    execution = Execution(config, commands, irc, log)
+    while True:
+        try:
+            execution.processCommandQueue()
+        except Exception as e:
+            log.log_exception(e)
+            if time.time() - lastError < 10:
+                log.log("Program keeps crashing, please restart")
+                break
+            lastError = time.time()
+
+    errorOut("Quitting")
