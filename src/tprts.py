@@ -5,13 +5,13 @@ from twitchirc import TwitchIrc, AuthenticationError, ConnectionFailedError
 from execution import Execution
 from config import Config
 from log import Log
-from commands import Commands
+from commands import Commands, RegexError
 
 appname = "TwitchPlaysRTS"
 appauthor = "TwitchPlaysRTS"
 
 # CLI: display error message, press any key to exit
-def errorOut(msg):
+def errorOut(log, msg):
     log.log(msg)
     input("Press RETURN to exit\n")
     sys.exit(1)
@@ -29,7 +29,7 @@ def getCredentials(config):
 
     return config
 
-if __name__ == "__main__":
+def main():
     config = Config(appname, appauthor)
     config = getCredentials(config)
     log = Log(config["log"])
@@ -39,12 +39,16 @@ if __name__ == "__main__":
     try:
         irc.connect(5)
     except AuthenticationError:
-        errorOut("Invalid username or oauth")
+        errorOut(log, "Invalid username or oauth")
+        return
     except ConnectionFailedError:
-        errorOut("Failed to connect to Twitch")
+        errorOut(log, "Failed to connect to Twitch")
+        return
     except Exception:
         log.log_exception(e)
-        errorOut("Failed to connect to Twitch")
+        errorOut(log, "Failed to connect to Twitch")
+        return
+
 
     lastError = 0
     commands = Commands(config, log)
@@ -59,4 +63,7 @@ if __name__ == "__main__":
                 break
             lastError = time.time()
 
-    errorOut("Quitting")
+    errorOut(log, "Quitting")
+
+if __name__ == "__main__":
+    main()
