@@ -13,7 +13,10 @@ appauthor = "TwitchPlaysRTS"
 
 # CLI: display error message, press any key to exit
 def errorOut(log, msg):
-    log.log(msg)
+    if log != None:
+        log.log(msg)
+    else:
+        print(msg)
     input("Press RETURN to exit\n")
     sys.exit(1)
 
