@@ -1,14 +1,7 @@
 import os
 import toml
 import re
-
-class RegexError(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-class TomlError(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+from error import *
 
 class Commands():
     def __init__(self, config, log):

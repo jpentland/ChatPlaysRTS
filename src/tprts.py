@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import time
 import sys
-from twitchirc import TwitchIrc, AuthenticationError, ConnectionFailedError
+from twitchirc import TwitchIrc
 from execution import Execution
 from config import Config
 from log import Log
-from commands import Commands, RegexError, TomlError
+from commands import Commands
+from error import *
 
 appname = "TwitchPlaysRTS"
 appauthor = "TwitchPlaysRTS"

@@ -3,14 +3,7 @@ import socket
 import time
 import re
 from queue import Queue
-
-class AuthenticationError(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-class ConnectionFailedError(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+from error import *
 
 class TwitchIrc(threading.Thread):
 
