@@ -5,7 +5,7 @@ from twitchirc import TwitchIrc, AuthenticationError, ConnectionFailedError
 from execution import Execution
 from config import Config
 from log import Log
-from commands import Commands, RegexError
+from commands import Commands, RegexError, TomlError
 
 appname = "TwitchPlaysRTS"
 appauthor = "TwitchPlaysRTS"
@@ -51,7 +51,7 @@ def main():
 
     try:
         commands = Commands(config, log)
-    except RegexError as e:
+    except (RegexError, TomlError, FileNotFoundError) as e:
         log.log_exception(e)
         errorOut(log, "Failed to load commands")
         return
