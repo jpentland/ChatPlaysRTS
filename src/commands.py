@@ -109,7 +109,8 @@ class Commands():
                 with open(self.user_commands_file_path, "w") as commandsFile:
                     toml.dump({"command" : newCommands}, commandsFile)
 
-                self.log.log("Migrated %d commands from old commands.toml to new user_commands.toml" % len(newCommands))
+                self.log.log("Migrated %d commands from old %s to new %s" % \
+                        (len(newCommands), self.config.commands_file, self.config.user_commands_file))
 
             self.log.log("Deleting old " + self.config.commands_file)
             os.remove(old_commands_file_path)
