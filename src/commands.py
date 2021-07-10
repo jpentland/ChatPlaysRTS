@@ -1,5 +1,10 @@
 import os
 import toml
+import re
+
+class RegexError(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 class Commands():
     def __init__(self, config, log):
@@ -15,6 +20,7 @@ class Commands():
                 self.config.user_commands_file
         )
         self.loadCommands()
+        self.compile()
 
     def loadCommands(self):
         if os.path.isfile(os.path.join(self.config.config_dir, self.config.commands_file)):
@@ -67,6 +73,16 @@ class Commands():
 
         self.log.log("Deleting old " + commands_file)
         os.remove(self.old_commands_file_path)
+
+    # Compile regex for all commands before main program start
+    def compile(self):
+        try:
+            for t in self.data:
+                # Surround regex with ^ and \s$ to sanitize
+                t["re"] = re.compile("^%s\s*$" % t["regex"])
+        except re.error as e:
+            self.log.log("Error in command regex: %s" % t["regex"])
+            raise RegexError(e)
 
     # Pass through self.data
     def __getitem__(self, key):

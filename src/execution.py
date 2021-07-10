@@ -8,7 +8,6 @@ pg.FAILSAFE=False
 class Execution():
     def __init__(self, config, commands, irc, log):
         self.config = config["execution"]
-        self.commands = self.compileCommands(commands)
         self.screenWidth, self.screenHeight = pg.size()
         self.reEval = re.compile("^\s*{(.*)}\s*$")
         self.lastClick = 0
@@ -34,7 +33,7 @@ class Execution():
     def processCommand(self, message):
         message = message.lower()
         for command in self.commands:
-            match = command["regex"].match(message)
+            match = command["re"].match(message)
             if match != None:
                 self.log.log("Got command: %s" % message)
                 operation = self.parse_operation(command["operation"])
@@ -100,14 +99,6 @@ class Execution():
                         newkwArgs[k] = arg
 
         return newkwArgs
-
-    # Compile regex for all commands before main program start
-    def compileCommands(self, commands):
-        for t in commands:
-            # Surround regex with ^ and \s$ to sanitize
-            t["regex"] = re.compile("^%s\s*$" % t["regex"])
-
-        return commands
 
     # Parse function call and parameters as defined in command config
     def parse_operation(self, fstring):
