@@ -49,10 +49,17 @@ def main():
         errorOut(log, "Failed to connect to Twitch")
         return
 
+    try:
+        commands = Commands(config, log)
+    except RegexError as e:
+        log.log_exception(e)
+        errorOut(log, "Failed to load commands")
+        return
+
+    execution = Execution(config, commands, irc, log)
 
     lastError = 0
-    commands = Commands(config, log)
-    execution = Execution(config, commands, irc, log)
+
     while True:
         try:
             execution.processCommandQueue()
