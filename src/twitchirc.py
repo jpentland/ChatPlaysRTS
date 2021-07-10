@@ -15,7 +15,7 @@ class ConnectionFailedError(Exception):
 class TwitchIrc(threading.Thread):
 
     def __init__(self, config, log):
-        threading.Thread.__init__(self)
+        threading.Thread.__init__(self, daemon = True)
         self.username = config["credentials"]["username"]
         self.channel = "#" + config["credentials"]["username"]
         self.oauth = config["credentials"]["oauth"]
