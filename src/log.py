@@ -20,6 +20,7 @@ class Log():
         self.logfile.write("STARTING %s" % strftime("%a, %d %b %Y %H:%M:%S +0000\n", localtime()))
         self.logfile.write("*****\n")
         self.logfile.flush()
+        self.callbacks = []
 
     def logTime(self):
         return strftime("%H:%M:%S")
@@ -31,7 +32,17 @@ class Log():
             self.logfile.write("%s %s\n" % (self.logTime(), message))
             self.logfile.flush()
 
+        for cb in self.callbacks:
+            cb(message)
+
+    def addCallback(self, cb):
+        self.callbacks.append(cb)
+
     def log_exception(self, exception):
         self.log("ERROR: " + str(exception))
         self.log(tb.format_exc(), echo = False)
+
+    def close(self):
+        self.logfile.flush()
+        self.logfile.close()
 
