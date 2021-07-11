@@ -52,9 +52,7 @@ class Execution():
         self.irc.sendMessage("Chat control has started!")
 
         while(True):
-            epoch, sender, command = self.commandQueue.get()
-            if sender == None:
-                raise Exception(command)
+            epoch, sender, command = self.irc.receive()
 
             if sender == self.owner:
                 match = self.reStart.match(command)
