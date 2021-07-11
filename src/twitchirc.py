@@ -112,6 +112,16 @@ class TwitchIrc(threading.Thread):
     def send(self, string):
         self.server.send(bytes(string + '\r\n', 'utf-8'))
 
+    def receive(self):
+        epoch, sender, command = self.commandQueue.get()
+        if sender == None:
+            if self.clientDisconnect == True:
+                raise ClientDisconnectError()
+            else:
+                raise ConnectionFailedError(command)
+
+        return epoch, sender, command
+
     def close(self):
         self.clientDisconnect = True
         self.server.shutdown(socket.SHUT_RDWR)
