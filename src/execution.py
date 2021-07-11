@@ -13,6 +13,7 @@ class Execution():
         self.lastClick = 0
         self.log = log
         self.commandQueue = irc.commandQueue
+        self.commands = commands
         self.irc = irc
         self.reStart = re.compile("^!startcontrol\s*$")
         self.reStop = re.compile("^!stopcontrol\s*$")
