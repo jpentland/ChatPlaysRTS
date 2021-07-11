@@ -14,3 +14,6 @@ class ConnectionFailedError(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+class ClientDisconnectError(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
