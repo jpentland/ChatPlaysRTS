@@ -25,6 +25,13 @@ class Controller(threading.Thread):
         self.irc = TwitchIrc(self.config, self.log)
 
         try:
+            self.commands = Commands(self.config, self.log)
+        except (RegexError, TomlError, FileNotFoundError) as e:
+            self.log.log_exception(e)
+            self.errorOut("Failed to load commands", fatal = True)
+            return
+
+        try:
             self.irc.connect(5)
         except AuthenticationError:
             self.onDisconnect()
@@ -41,13 +48,6 @@ class Controller(threading.Thread):
             self.onDisconnect()
             self.log.log_exception(e)
             self.errorOut("Failed to connect to Twitch")
-            return
-
-        try:
-            self.commands = Commands(self.config, self.log)
-        except (RegexError, TomlError, FileNotFoundError) as e:
-            self.log.log_exception(e)
-            self.errorOut("Failed to load commands")
             return
 
         self.execution = Execution(self.config, self.commands, self.irc, self.log)
