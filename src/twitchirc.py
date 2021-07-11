@@ -19,6 +19,8 @@ class TwitchIrc(threading.Thread):
         self.reMessage = re.compile(":([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
         self.commandQueue = Queue()
         self.log = log
+        self.connected = False
+        self.clientDisconnect = False
 
     def sendMessage(self, message):
         send = "PRIVMSG " + self.channel + " :" + message
@@ -26,6 +28,7 @@ class TwitchIrc(threading.Thread):
         self.send(send)
 
     def connect(self, tries):
+        self.clientDisconnect = False
         triesLeft = tries
         while triesLeft > 0:
             try:
@@ -40,6 +43,8 @@ class TwitchIrc(threading.Thread):
                 else:
                     triesLeft -= 1
                     self.log.log("retrying...")
+
+        self.connected = True
 
     def start(self):
         connection_data = (self.domain, self.port)
@@ -76,6 +81,7 @@ class TwitchIrc(threading.Thread):
                 if len(message) == 0:
                     self.log.log("Connection to twitch terminated")
                     self.commandQueue.put((time.time(), None, "Disconnected"))
+                    self.connected = False
                     self.server.close()
                     return
 
@@ -96,6 +102,7 @@ class TwitchIrc(threading.Thread):
                 self.log.log(e)
                 self.commandQueue.put((time.time(), None, error.args))
                 self.server.close()
+                self.connected = False
                 return
 
 
@@ -103,4 +110,6 @@ class TwitchIrc(threading.Thread):
         self.server.send(bytes(string + '\r\n', 'utf-8'))
 
     def close(self):
-        self.server.close()
+        self.clientDisconnect = True
+        self.server.shutdown(socket.SHUT_RDWR)
+        self.connected = False
