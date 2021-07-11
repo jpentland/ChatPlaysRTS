@@ -29,7 +29,7 @@ class Controller(threading.Thread):
             self.commands = Commands(self.config, self.log)
         except (RegexError, TomlError, FileNotFoundError) as e:
             self.log.log_exception(e)
-            self.errorOut("Failed to load commands", fatal = True)
+            self.errorOut("Failed to load commands")
             return
 
         try:
