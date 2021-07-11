@@ -101,3 +101,6 @@ class TwitchIrc(threading.Thread):
 
     def send(self, string):
         self.server.send(bytes(string + '\r\n', 'utf-8'))
+
+    def close(self):
+        self.server.close()
