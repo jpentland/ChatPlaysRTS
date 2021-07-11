@@ -66,15 +66,24 @@ class TwitchIrc(threading.Thread):
                 raise Exception("connection failed")
 
             for msg in message.split("\n"):
+                #Check for connected message
                 regex = ":[^ ]+ [0-9]+ " + self.username + " " + self.channel + " :End of /NAMES list"
                 if re.match(regex, msg):
                     self.log.log("Connected")
                     threading.Thread.start(self)
                     return
 
+                # Check for invalid oauth
                 regex = ".*Login authentication failed"
                 if re.match(regex, msg.strip()):
                     raise AuthenticationError()
+
+                # Check for invalid username
+                # invalid username means wrong username will be returned from server
+                match = re.match(":[^ ]+ [0-9]+ (.*) :>", msg)
+                if match != None:
+                    if match.group(1) != self.username:
+                        raise AuthenticationError()
 
     def run(self):
 
