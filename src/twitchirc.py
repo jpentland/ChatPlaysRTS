@@ -37,7 +37,10 @@ class TwitchIrc(threading.Thread):
             except AuthenticationError as e:
                 raise e
             except Exception as e:
-                if triesLeft == 1:
+                if self.clientDisconnect:
+                    self.log.log("Connection aborted")
+                    raise ClientDisconnectError()
+                elif triesLeft == 1:
                     self.log.log_exception(e)
                     raise ConnectionFailedError()
                 else:
