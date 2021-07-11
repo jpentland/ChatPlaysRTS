@@ -32,8 +32,9 @@ class Log():
             self.logfile.write("%s %s\n" % (self.logTime(), message))
             self.logfile.flush()
 
-        for cb in self.callbacks:
-            cb(message)
+        if echo:
+            for cb in self.callbacks:
+                cb(message)
 
     def addCallback(self, cb):
         self.callbacks.append(cb)
