@@ -78,7 +78,7 @@ class Gui:
             self.config["credentials"]["remember"] = 1
             self.config.write()
 
-        self.controller = Controller(self.config, self.log, self.onConnect, self.onDisconnect)
+        self.controller = Controller(self.config, self.log, self.onConnect, self.onDisconnect, self.error)
         self.controller.start()
 
     def disconnect(self):
@@ -92,9 +92,10 @@ class Gui:
             self.text.insert(tk.END, "%s\n" % msg.strip())
             self.text.see("end")
 
-    def errorOut(self, message):
+    def error(self, message, fatal = False):
         tk.messagebox.showerror("ERROR", message)
-        sys.exit()
+        if fatal:
+            sys.exit()
 
     def onConnect(self):
         self.connectedLabel.config(text = "Connected", fg = "green")
