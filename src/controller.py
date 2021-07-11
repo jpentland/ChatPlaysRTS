@@ -19,6 +19,7 @@ class Controller(threading.Thread):
 
     def errorOut(self, message, fatal = False):
         self.log.log(message)
+        self.onDisconnect()
         self.onError(message, fatal)
 
     def run(self):
@@ -34,18 +35,15 @@ class Controller(threading.Thread):
         try:
             self.irc.connect(5)
         except AuthenticationError:
-            self.onDisconnect()
             self.errorOut("Invalid username or oauth")
             return
         except ConnectionFailedError:
-            self.onDisconnect()
             self.errorOut("Failed to connect to Twitch")
             return
         except ClientDisconnectError:
             self.onDisconnect()
             return
         except Exception:
-            self.onDisconnect()
             self.log.log_exception(e)
             self.errorOut("Failed to connect to Twitch")
             return
@@ -59,7 +57,6 @@ class Controller(threading.Thread):
             try:
                 self.execution.processCommandQueue()
             except ConnectionFailedError as e:
-                self.onDisconnect()
                 self.errorOut("IRC Disconnected")
                 return
             except ClientDisconnectError as e:
