@@ -9,15 +9,17 @@ from commands import Commands
 from error import *
 
 class Controller(threading.Thread):
-    def __init__(self, config, log, onConnect, onDisconnect):
+    def __init__(self, config, log, onConnect, onDisconnect, onError):
         threading.Thread.__init__(self, daemon = True)
         self.config = config
         self.log = log
         self.onConnect = onConnect
         self.onDisconnect = onDisconnect
+        self.onError = onError
 
-    def errorOut(self, message):
+    def errorOut(self, message, fatal = False):
         self.log.log(message)
+        self.onError(message, fatal)
 
     def run(self):
         self.irc = TwitchIrc(self.config, self.log)
