@@ -1,86 +1,43 @@
 #!/usr/bin/env python3
 import time
 import sys
-from twitchirc import TwitchIrc
-from execution import Execution
 from config import Config
 from log import Log
-from commands import Commands
 from error import *
+
+from tkinter import Tk, messagebox
+from gui import Gui
 
 appname = "TwitchPlaysRTS"
 appauthor = "TwitchPlaysRTS"
 
-# CLI: display error message, press any key to exit
-def errorOut(log, msg):
+# GUI: Display error message and exit
+def errorOutGUI(log, msg):
     if log != None:
         log.log(msg)
     else:
         print(msg)
-    input("Press RETURN to exit\n")
-    sys.exit(1)
-
-# CLI: Get username and oauth values if not set in config
-def getCredentials(config):
-    if "credentials" not in config:
-        config["credentials"] = {}
-
-    if "username" not in config["credentials"]:
-        config["credentials"]["username"] = input("Please enter your stream username: ")
-
-    if "oauth" not in config["credentials"]:
-        config["credentials"]["oauth"] = input("Please enter your stream oauth: ")
-
-    return config
+    messagebox.showerror("ERROR", msg)
+    sys.exit()
 
 def main():
     try:
         config = Config(appname, appauthor)
     except TomlError as e:
         print(str(e))
-        errorOut(None, "Failed to load config")
-        return
-
-    config = getCredentials(config)
-    log = Log(config["log"])
-    config.write()
-    irc = TwitchIrc(config, log)
-
-    try:
-        irc.connect(5)
-    except AuthenticationError:
-        errorOut(log, "Invalid username or oauth")
-        return
-    except ConnectionFailedError:
-        errorOut(log, "Failed to connect to Twitch")
-        return
-    except Exception:
-        log.log_exception(e)
-        errorOut(log, "Failed to connect to Twitch")
+        errorOutGUI(None, "Failed to load config.toml\n%s" % str(e))
         return
 
     try:
-        commands = Commands(config, log)
-    except (RegexError, TomlError, FileNotFoundError) as e:
-        log.log_exception(e)
-        errorOut(log, "Failed to load commands")
+        log = Log(config["log"])
+    except Exception as e:
+        print(str(e))
+        errorOutGUI(None, "Failed to load config.toml\n%s" % str(e))
         return
 
-    execution = Execution(config, commands, irc, log)
-
-    lastError = 0
-
-    while True:
-        try:
-            execution.processCommandQueue()
-        except Exception as e:
-            log.log_exception(e)
-            if time.time() - lastError < 10:
-                log.log("Program keeps crashing, please restart")
-                break
-            lastError = time.time()
-
-    errorOut(log, "Quitting")
+    root = Tk()
+    gui = Gui(root, config, log)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
