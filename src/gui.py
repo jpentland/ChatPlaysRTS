@@ -54,7 +54,7 @@ class Gui:
         self.disconnectButton.grid(row=4, column=2)
         self.disconnectButton.config(state = tk.DISABLED)
 
-        self.close_button = tk.Button(self.mainframe, text="Close", command=self.mainframe.quit)
+        self.close_button = tk.Button(self.mainframe, text="Close", command=self.master.quit)
         self.close_button.grid(row=4, column=3)
 
         self.text = tkst.ScrolledText(self.master, height = 20, width = 80)
@@ -95,7 +95,8 @@ class Gui:
     def error(self, message, fatal = False):
         tk.messagebox.showerror("ERROR", message)
         if fatal:
-            sys.exit()
+            print("FATAL")
+            self.master.quit()
 
     def onConnect(self):
         self.connectedLabel.config(text = "Connected", fg = "green")
