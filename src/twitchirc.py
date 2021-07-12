@@ -42,7 +42,7 @@ class TwitchIrc(threading.Thread):
                     raise ClientDisconnectError()
                 elif triesLeft == 1:
                     self.log.log_exception(e)
-                    raise ConnectionFailedError()
+                    raise ConnectionFailedError(e)
                 else:
                     triesLeft -= 1
                     self.log.log("retrying...")
