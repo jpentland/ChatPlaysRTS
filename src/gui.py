@@ -27,9 +27,18 @@ class Gui:
         self.menu = tk.Menu(master)
         self.tprtsMenu = tk.Menu(self.menu, tearoff = 0)
         self.tprtsMenu.add_command(label = "Open Config Directory", command = self.openConfigDir)
+        self.tprtsMenu.add_separator()
         self.tprtsMenu.add_command(label = "Quit", command = self.master.quit)
         self.menu.add_cascade(label = "TwitchPlaysRTS", menu = self.tprtsMenu)
+
+        self.helpMenu = tk.Menu(self.menu, tearoff = 0)
+        self.helpMenu.add_command(label = "Readme", command = self.open_readme)
+        self.helpMenu.add_command(label = "Commands Help", command = self.open_commands_help)
+        self.helpMenu.add_command(label = "Keys list", command = self.open_keys_list)
+        self.menu.add_cascade(label = "Help", menu = self.helpMenu)
+
         self.master.config(menu = self.menu)
+
 
         self.mainframe = tk.Frame(master)
         self.mainframe.pack()
@@ -124,3 +133,20 @@ class Gui:
             subprocess.Popen(['xdg-open', self.config.config_dir])
         else:
             self.error("Not implemented for your OS: %s" % os.name)
+
+    def openFile(self, file):
+        if os.name == 'nt':
+            subprocess.Popen(['notepad', file])
+        elif os.name == 'posix':
+            subprocess.Popen(['xdg-open', file])
+        else:
+            self.error("Not implemented for your OS: %s" % os.name)
+
+    def open_readme(self):
+        self.openFile("README.txt")
+
+    def open_commands_help(self):
+        self.openFile(os.path.join("doc", "Commands.txt"))
+
+    def open_keys_list(self):
+        self.openFile(os.path.join("doc", "keys.txt"))
