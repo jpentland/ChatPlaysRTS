@@ -75,7 +75,7 @@ class Gui:
         self.close_button = tk.Button(self.mainframe, text="Close", command=self.master.quit)
         self.close_button.grid(row=4, column=3)
 
-        self.text = tkst.ScrolledText(self.master, height = 15, width = 60)
+        self.text = tkst.ScrolledText(self.master, height = 0, width = 60)
         self.text.pack(fill = tk.BOTH, expand = True)
         self.textLock = Lock()
         self.log.addCallback(self.writeLog)
@@ -84,6 +84,8 @@ class Gui:
         self.connectionFrame.pack(fill = tk.X)
         self.connectedLabel = tk.Label(self.connectionFrame, text = "Not connected", fg = "red")
         self.connectedLabel.pack(side = tk.LEFT)
+
+        self.master.geometry("400x400")
 
     def connect(self):
         self.connectButton.config(state = tk.DISABLED)
