@@ -17,10 +17,15 @@ class Controller(threading.Thread):
         self.onDisconnect = onDisconnect
         self.onError = onError
 
-    def errorOut(self, message, fatal = False):
+    def errorOut(self, message, e = None, fatal = False):
+        if e == None:
+            self.onError(message, fatal)
+        else:
+            self.onError("%s\n%s" % (message, str(e)), fatal)
+            self.log.log_exception(e)
+
         self.log.log(message)
         self.onDisconnect()
-        self.onError(message, fatal)
 
     def run(self):
         self.irc = TwitchIrc(self.config, self.log)
@@ -37,15 +42,15 @@ class Controller(threading.Thread):
         except AuthenticationError:
             self.errorOut("Invalid username or oauth")
             return
-        except ConnectionFailedError:
-            self.errorOut("Failed to connect to Twitch")
+        except ConnectionFailedError as e:
+            self.errorOut("Failed to connect to Twitch", e = e)
             return
         except ClientDisconnectError:
             self.onDisconnect()
             return
         except Exception:
             self.log.log_exception(e)
-            self.errorOut("Failed to connect to Twitch")
+            self.errorOut("Failed to connect to Twitch", e = e)
             return
 
         self.execution = Execution(self.config, self.commands, self.irc, self.log)
@@ -57,7 +62,7 @@ class Controller(threading.Thread):
             try:
                 self.execution.processCommandQueue()
             except ConnectionFailedError as e:
-                self.errorOut("IRC Disconnected")
+                self.errorOut("IRC Disconnected", e)
                 return
             except ClientDisconnectError as e:
                 self.onDisconnect()
@@ -66,12 +71,10 @@ class Controller(threading.Thread):
             except Exception as e:
                 self.log.log_exception(e)
                 if time.time() - lastError < 10:
-                    self.log.log("Program keeps crashing, please restart")
+                    self.errorOut("Cannot recover from error", e)
                     return
                 self.lastError = time.time()
                 continue
-
-        self.errorOut("Quitting")
 
     def stop(self):
         self.irc.close()
