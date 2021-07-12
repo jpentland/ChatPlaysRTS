@@ -3,6 +3,8 @@ import tkinter.scrolledtext as tkst
 from error import *
 import sys
 import time
+import os
+import subprocess
 from threading import Lock
 from controller import Controller
 
@@ -21,6 +23,13 @@ class Gui:
 
         if "oauth" in config["credentials"]:
             self.oauth.set(config["credentials"]["oauth"])
+
+        self.menu = tk.Menu(master)
+        self.tprtsMenu = tk.Menu(self.menu, tearoff = 0)
+        self.tprtsMenu.add_command(label = "Open Config Directory", command = self.openConfigDir)
+        self.tprtsMenu.add_command(label = "Quit", command = self.master.quit)
+        self.menu.add_cascade(label = "TwitchPlaysRTS", menu = self.tprtsMenu)
+        self.master.config(menu = self.menu)
 
         self.mainframe = tk.Frame(master)
         self.mainframe.pack()
@@ -107,3 +116,11 @@ class Gui:
         self.connectedLabel.config(text = "Not connected", fg = "red")
         self.connectButton.config(state = tk.NORMAL)
         self.disconnectButton.config(state = tk.DISABLED)
+
+    def openConfigDir(self):
+        if os.name == 'nt':
+            subprocess.Popen(['explorer', self.config.config_dir])
+        elif os.name == 'posix':
+            subprocess.Popen(['xdg-open', self.config.config_dir])
+        else:
+            self.error("Not implemented for your OS: %s" % os.name)
