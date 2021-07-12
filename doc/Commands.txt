@@ -2,13 +2,15 @@
 Creating your own commands
 -------------------------
 
-User-defined commands can be created by editing to user_commands.toml file.
+User-defined commands can be defined by creating a user commands command file.
 
 To start, create a new text file called "usercommands.toml" in this directory:
 
 C:\Users\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\
 
-This directory should already exist, if you have run the program at least once.
+You can also find it by clicking in the application's menu under TwitchPlaysRTS -> Open Config Directory.
+
+To reload commands, simply disconnect the program, and reconnect.
 
 --------------
 Basic commands
