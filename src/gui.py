@@ -75,8 +75,8 @@ class Gui:
         self.close_button = tk.Button(self.mainframe, text="Close", command=self.master.quit)
         self.close_button.grid(row=4, column=3)
 
-        self.text = tkst.ScrolledText(self.master, height = 20, width = 80)
-        self.text.pack(fill = tk.Y)
+        self.text = tkst.ScrolledText(self.master, height = 15, width = 60)
+        self.text.pack(fill = tk.BOTH, expand = True)
         self.textLock = Lock()
         self.log.addCallback(self.writeLog)
 
