@@ -29,8 +29,12 @@ class Log():
         with self.lock:
             if self.echo and echo:
                 print(message)
-            self.logfile.write("%s %s\n" % (self.logTime(), message))
-            self.logfile.flush()
+            try:
+                self.logfile.write("%s %s\n" % (self.logTime(), message))
+                self.logfile.flush()
+            except:
+                print("Warning failed to write log")
+                pass
 
         if echo:
             for cb in self.callbacks:
