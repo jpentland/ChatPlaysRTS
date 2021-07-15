@@ -8,8 +8,8 @@ from error import *
 from tkinter import Tk, messagebox
 from gui import Gui
 
-appname = "TwitchPlaysRTS"
-appauthor = "TwitchPlaysRTS"
+appname = "ChatPlaysRTS"
+appauthor = "ChatPlaysRTS"
 
 # GUI: Display error message and exit
 def errorOutGUI(log, msg):
