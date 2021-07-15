@@ -16,7 +16,7 @@ class Gui:
         self.username = tk.StringVar(master)
         self.oauth = tk.StringVar(master)
         self.remember = tk.IntVar(master)
-        master.title("Twitch Plays RTS")
+        master.title("Chat Plays RTS")
 
         if "username" in config["credentials"]:
             self.username.set(config["credentials"]["username"])
@@ -29,7 +29,7 @@ class Gui:
         self.tprtsMenu.add_command(label = "Open Config Directory", command = self.openConfigDir)
         self.tprtsMenu.add_separator()
         self.tprtsMenu.add_command(label = "Quit", command = self.master.quit)
-        self.menu.add_cascade(label = "TwitchPlaysRTS", menu = self.tprtsMenu)
+        self.menu.add_cascade(label = "ChatPlaysRTS", menu = self.tprtsMenu)
 
         self.helpMenu = tk.Menu(self.menu, tearoff = 0)
         self.helpMenu.add_command(label = "Readme", command = self.open_readme)
