@@ -18,6 +18,9 @@ class Gui:
         self.remember = tk.IntVar(master)
         master.title("Chat Plays RTS")
 
+        if "credentials" not in config:
+            config["credentials"] = {}
+
         if "username" in config["credentials"]:
             self.username.set(config["credentials"]["username"])
 
