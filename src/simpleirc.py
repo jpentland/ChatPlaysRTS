@@ -91,7 +91,7 @@ class SimpleIrc(threading.Thread):
             try:
                 message = self.server.recv(2048).decode('utf-8')
                 if len(message) == 0:
-                    self.log.log("Connection to twitch terminated")
+                    self.log.log("Connection to %s terminated" % self.domain)
                     self.commandQueue.put((time.time(), None, "Disconnected"))
                     self.connected = False
                     self.server.close()
