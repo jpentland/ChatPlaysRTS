@@ -28,7 +28,7 @@ This program is primarily targeted for Windows 10, however it should also work o
 ## Custom Commmands
 
 * Custom commands can be configured by creating a usercommands.toml in the app directory.
-* The file should be located at: C:\Users\\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\usercommands.toml
+* The file should be located at: C:\Users\\<username>\AppData\Local\ChatPlaysRTS\TwitchPlaysRTS\usercommands.toml
 * For more information, see Commands.txt in the doc directory
 
 ## Default Commands:
@@ -65,5 +65,5 @@ This program is primarily targeted for Windows 10, however it should also work o
 * Mouse movement commands won't move the mouse all the way to the edge of the screen, to prevent accidental scrolling.
 * The !startcontrol and !stopcontrol commands only work for the streamer
 * The commands !mouseup, !mousedown, !boxdownleft, !boxupright etc can also take an optional distance.
-* The config file is located in: C:\Users\\<username>\AppData\Local\TwitchPlaysRTS\TwitchPlaysRTS\config.toml, which stores credentials and other information.
+* The config file is located in: C:\Users\\<username>\AppData\Local\ChatPlaysRTS\ChatPlaysRTS\config.toml, which stores credentials and other information.
 * If you have any problems, please send the output.log file to a developer.
