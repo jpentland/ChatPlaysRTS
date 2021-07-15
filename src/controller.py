@@ -1,7 +1,7 @@
 import sys
 import threading
 import time
-from twitchirc import TwitchIrc
+from simpleirc import SimpleIrc
 from execution import Execution
 from config import Config
 from log import Log
@@ -28,7 +28,7 @@ class Controller(threading.Thread):
         self.onDisconnect()
 
     def run(self):
-        self.irc = TwitchIrc(self.config, self.log)
+        self.irc = SimpleIrc(self.config, self.log)
 
         try:
             self.commands = Commands(self.config, self.log)

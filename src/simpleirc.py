@@ -5,7 +5,7 @@ import re
 from queue import Queue
 from error import *
 
-class TwitchIrc(threading.Thread):
+class SimpleIrc(threading.Thread):
 
     def __init__(self, config, log):
         threading.Thread.__init__(self, daemon = True)
