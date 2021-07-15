@@ -43,7 +43,7 @@ class Controller(threading.Thread):
             self.errorOut("Invalid username or oauth")
             return
         except ConnectionFailedError as e:
-            self.errorOut("Failed to connect to Twitch", e = e)
+            self.errorOut("Failed to connect", e = e)
             return
         except ClientDisconnectError:
             self.onDisconnect()
