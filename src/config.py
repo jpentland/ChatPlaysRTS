@@ -14,13 +14,18 @@ defaultConfig = {
         "irc" : {
             "domain" : "irc.chat.twitch.tv",
             "port" : 6667,
-            "PING_MSG" : "PING :tmi.twitch.tv",
-            "PONG_MSG" : "PONG :tmi.twitch.tv"
         },
         "log": {
             "echo" : True,
             "logfile" : "output.log",
         }
+}
+
+deletedConfigs = {
+        "irc" : {
+            "PING_MSG" : None,
+            "PONG_MSG" : None,
+        },
 }
 
 # Stores config object and reads from disk
@@ -35,6 +40,7 @@ class Config:
         self.defaultconf_dir = "defaultconf"
         self.migrateOldConfig()
         self.data = self.loadConfig()
+        self.deleteDeletedConfigs()
 
     # Get contents of config file or defaultconfig if doesnt exist
     def loadConfig(self):
@@ -71,6 +77,25 @@ class Config:
                 pathlib.Path(os.path.dirname(self.config_dir)).mkdir(parents=True, exist_ok=True)
                 copytree(OLD_PATH, self.config_dir)
                 rmtree(OLD_PATH)
+
+    # Delete deleted configs from config
+    def deleteDeletedConfigs(self):
+        count = 0
+        for k, v in deletedConfigs.items():
+            if k in self.data:
+                if v == None:
+                    del self.data[k]
+                    print("Deleting %s from config" % k)
+                    count += 1
+                    continue
+                for k2, v2 in deletedConfigs[k].items():
+                    if k2 in self.data[k]:
+                        del self.data[k][k2]
+                        print("Deleting %s.%s from config" % (k, k2))
+                        count += 1
+
+        if count > 0:
+            self.write()
 
     # Write config to disk
     def write(self):
