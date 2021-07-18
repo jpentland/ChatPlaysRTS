@@ -97,10 +97,12 @@ class SimpleIrc(threading.Thread):
                     self.server.close()
                     return
 
-                elif (self.PING_MSG[:4] == message[:4]):
+                elif (message[:4] == "PING"):
+                    self.log.log("Got ping: %s" % repr(message))
+                    pong = "PONG" + message[4:]
                     self.log.log("Responding to PING")
-                    self.log.log(repr(message))
-                    self.send(self.PONG_MSG)
+                    self.log.log("Responding: %s" % repr(pong))
+                    self.send(pong)
 
                 else:
                     match = self.reMessage.match(message)
