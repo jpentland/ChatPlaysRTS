@@ -99,8 +99,10 @@ class Config:
 
     # Write config to disk
     def write(self):
+        config_path = os.path.join(self.config_dir, self.config_file)
+        print("Write config to %s" % config_path)
         pathlib.Path(self.config_dir).mkdir(parents=True, exist_ok=True)
-        with open(os.path.join(self.config_dir, self.config_file), "w") as configFile:
+        with open(config_path, "w") as configFile:
             toml.dump(self.data, configFile)
 
     # Pass through self.data
