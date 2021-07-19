@@ -11,6 +11,7 @@ from gui import Gui
 appname = "ChatPlaysRTS"
 appauthor = "ChatPlaysRTS"
 
+
 # GUI: Display error message and exit
 def errorOutGUI(log, msg):
     if log != None:
@@ -21,18 +22,20 @@ def errorOutGUI(log, msg):
     sys.exit()
 
 def main():
+    log = Log()
+
     try:
-        config = Config(appname, appauthor)
+        config = Config(appname, appauthor, log)
     except TomlError as e:
         print(str(e))
-        errorOutGUI(None, "Failed to load config.toml\n%s" % str(e))
+        errorOutGUI(log, "Failed to load config.toml\n%s" % str(e))
         return
 
     try:
-        log = Log(config["log"])
+        log.addConfig(config["log"])
     except Exception as e:
         print(str(e))
-        errorOutGUI(None, "Failed to load config.toml\n%s" % str(e))
+        errorOutGUI(log, "Failed to load config.toml\n%s" % str(e))
         return
 
     root = Tk()
