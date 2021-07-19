@@ -14,8 +14,6 @@ class SimpleIrc(threading.Thread):
         self.oauth = config["credentials"]["oauth"]
         self.domain = config["irc"]["domain"]
         self.port = config["irc"]["port"]
-        self.PING_MSG = config["irc"]["PING_MSG"]
-        self.PONG_MSG = config["irc"]["PONG_MSG"]
         self.reMessage = re.compile(":([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
         self.commandQueue = Queue()
         self.log = log
