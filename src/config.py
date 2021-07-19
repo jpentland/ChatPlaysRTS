@@ -16,7 +16,6 @@ defaultConfig = {
             "port" : 6667,
         },
         "log": {
-            "echo" : True,
             "logfile" : "output.log",
         }
 }
@@ -26,6 +25,9 @@ deletedConfigs = {
             "PING_MSG" : None,
             "PONG_MSG" : None,
         },
+        "log": {
+            "echo" : True,
+        }
 }
 
 # Stores config object and reads from disk
