@@ -32,9 +32,10 @@ deletedConfigs = {
 
 # Stores config object and reads from disk
 class Config:
-    def __init__(self, appname, appauthor):
+    def __init__(self, appname, appauthor, log):
         self.appname = appname
         self.appauthor = appauthor
+        self.log = log
         self.config_dir = user_data_dir(appname, appauthor)
         self.config_file = "config.toml"
         self.commands_file = "commands.toml"
@@ -52,7 +53,7 @@ class Config:
                 try:
                     config = toml.loads(content)
                 except toml.decoder.TomlDecodeError as e:
-                    print("Failed to read %s" % self.config_file)
+                    self.log.log("Failed to read %s" % self.config_file)
                     raise TomlError(e)
 
                 # Copy any missing default config options
@@ -87,13 +88,13 @@ class Config:
             if k in self.data:
                 if v == None:
                     del self.data[k]
-                    print("Deleting %s from config" % k)
+                    self.log.log("Deleting %s from config" % k)
                     count += 1
                     continue
                 for k2, v2 in deletedConfigs[k].items():
                     if k2 in self.data[k]:
                         del self.data[k][k2]
-                        print("Deleting %s.%s from config" % (k, k2))
+                        self.log.log("Deleting %s.%s from config" % (k, k2))
                         count += 1
 
         if count > 0:
@@ -102,7 +103,7 @@ class Config:
     # Write config to disk
     def write(self):
         config_path = os.path.join(self.config_dir, self.config_file)
-        print("Write config to %s" % config_path)
+        self.log.log("Write config to %s" % config_path)
         pathlib.Path(self.config_dir).mkdir(parents=True, exist_ok=True)
         with open(config_path, "w") as configFile:
             toml.dump(self.data, configFile)
