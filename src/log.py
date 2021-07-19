@@ -35,34 +35,36 @@ class Log():
     def logTime(self):
         return strftime("%H:%M:%S")
 
-    # Write to logfile or buffer if logfile not available yet
-    def writeOrBuffer(self, message):
-        if self.logfile != None:
-            try:
-                self.logfile.write(message)
-                self.logfile.flush()
-            except Exception as e:
-                self.log("Failed to write log")
-                self.log_exception(e)
-        else:
-            self.buffer.append(message)
+    # Write a message to the log file with optional echo to callback and console
+    # save to buffer first if log file not open yet
+    def log(self, message, echo = True):
+        with self.lock:
+            if self.logfile != None:
+                try:
+                    self.logfile.write(message)
+                    self.logfile.flush()
+                except Exception as e:
+                    self.log("Failed to write log")
+                    self.log_exception(e)
+
+                if echo:
+                    print(message)
+                    for cb in self.callbacks:
+                        cb(message)
+
+            else:
+                if echo:
+                    print(message)
+                self.buffer.append((message, echo))
 
     # Flush buffer to newly opened log file
     def flushBuffer(self):
-        for message in self.buffer:
+        for (message, echo) in self.buffer:
             self.logfile.write(message)
             self.logfile.flush()
-
-    # Write a message to the log file with optional echo to callback and console
-    def log(self, message, echo = True):
-        with self.lock:
             if echo:
-                print(message)
-            self.writeOrBuffer("%s %s\n" % (self.logTime(), message))
-
-        if echo:
-            for cb in self.callbacks:
-                cb(message)
+                for cb in self.callbacks:
+                    cb(message)
 
     # Log an exception, add stack trace with no echo
     def log_exception(self, exception):
