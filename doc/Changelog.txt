@@ -1,6 +1,8 @@
 Version 0.12
 ------
 * Rename project to Chat Plays RTS (due to Twitch trademark)
+* Support multiple operations in commands (see commands.txt)
+* Improvements to console logging
 
 Version 0.11
 ------
