@@ -37,13 +37,33 @@ class Execution():
             match = command["re"].match(message)
             if match != None:
                 self.log.log("Got command: %s" % message)
-                operation = self.parse_operation(command["operation"])
-                try:
-                    kwargs = self.processArgs(command["params"], match)
-                except KeyError:
-                    kwargs = {}
-                operation(self, **kwargs)
+                if type(command["operation"]) is str:
+                    self.performSingleOperation(command, match)
+                elif type(command["operation"]) is list:
+                    self.performMultipleOperations(command, match)
+                else:
+                    raise TomlError("Invalid operation type")
+                break
 
+    # Perform a single operation (legacy format)
+    def performSingleOperation(self, command, match):
+        op_func = self.parse_operation(command["operation"])
+        try:
+            kwargs = self.processArgs(command["params"], match)
+        except KeyError:
+            kwargs = {}
+        op_func(self, **kwargs)
+
+    # Perform multiple operations (new format)
+    def performMultipleOperations(self, command, match):
+        for operation in command["operation"]:
+            op_func = self.parse_operation(operation["operation"])
+            try:
+                kwargs = self.processArgs(operation["params"], match)
+            except KeyError:
+                kwargs = {}
+
+            op_func(self, **kwargs)
 
     # Read commands from command queue
     def processCommandQueue(self):
