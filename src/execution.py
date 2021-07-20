@@ -146,12 +146,21 @@ class Execution():
         pg.dragTo(tx, ty, 0.5, pg.easeInOutQuad)
 
     # Call pg.click directly
-    def click(self, *args, **kwargs):
+    def click(self, shift = False, ctrl = False, alt = False, *args, **kwargs):
         timeDifference = time.time() - self.lastClick
+
+        mods = zip([ctrl, alt, shift], ["ctrl", "alt","shift"])
+        for on, mod in mods:
+            if on:
+                pg.keyDown(mod)
 
         if timeDifference < self.config["clickRateLimit"]:
             self.log.log("Sleeping to prevent doubleclick")
             time.sleep(self.config["clickRateLimit"] - timeDifference)
+
+        for on, mod in mods:
+            if on:
+                pg.keyUp(mod)
 
         pg.click(*args, **kwargs)
         self.lastClick = time.time()
