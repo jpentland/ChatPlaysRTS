@@ -113,6 +113,7 @@ class Commands():
         try:
             for t in self.data:
                 # Surround regex with ^ and \s$ to sanitize
+                self.log.log("Load command: %s" % t["regex"])
                 t["re"] = re.compile("^%s\s*$" % t["regex"])
         except re.error as e:
             self.log.log("Error in command regex: %s" % t["regex"])
