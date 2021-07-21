@@ -1,3 +1,4 @@
 pyautogui
 appdirs
 toml
+screeninfo
