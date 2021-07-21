@@ -9,9 +9,8 @@ class SimpleIrc(threading.Thread):
 
     def __init__(self, config, log):
         threading.Thread.__init__(self, daemon = True)
-        self.username = config["credentials"]["username"]
-        self.channel = "#" + config["credentials"]["username"]
-        self.oauth = config["credentials"]["oauth"]
+        self.username, self.oauth, _ = config.getCredentials()
+        self.channel = "#" + self.username
         self.domain = config["irc"]["domain"]
         self.port = config["irc"]["port"]
         self.reMessage = re.compile(":([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")

@@ -22,14 +22,9 @@ class Gui:
         self.selectedMonitor.set(self.monitor.getSelectedMonitor())
         master.title("Chat Plays RTS")
 
-        if "credentials" not in config:
-            config["credentials"] = {}
-
-        if "username" in config["credentials"]:
-            self.username.set(config["credentials"]["username"])
-
-        if "oauth" in config["credentials"]:
-            self.oauth.set(config["credentials"]["oauth"])
+        username, oauth, remember = config.getCredentials()
+        self.username.set(username)
+        self.oauth.set(oauth)
 
         self.menu = tk.Menu(master)
         self.tprtsMenu = tk.Menu(self.menu, tearoff = 0)
@@ -74,9 +69,7 @@ class Gui:
         self.rememberLabel.pack(side = tk.LEFT)
         self.rememberButton = tk.Checkbutton(self.rememberFrame, variable = self.remember)
         self.rememberButton.pack(side = tk.RIGHT)
-        if "remember" in self.config["credentials"] \
-                and self.config["credentials"]["remember"] == 1:
-            self.remember.set(1)
+        self.remember.set(remember)
 
         self.connectButton = tk.Button(self.mainframe, text="Connect", command=self.connect)
         self.connectButton.grid(row=4, column=1)
@@ -105,11 +98,7 @@ class Gui:
         self.disconnectButton.config(state = tk.NORMAL)
         self.connectedLabel.config(text = "Connecting...", fg = "yellow")
 
-        self.config["credentials"]["username"] = self.username.get()
-        self.config["credentials"]["oauth"] = self.oauth.get()
-        if self.remember.get() == 1:
-            self.config["credentials"]["remember"] = 1
-            self.config.write()
+        self.config.setCredentials(self.username.get(), self.oauth.get(), self.remember.get())
 
         self.controller = Controller(self.config, self.log, self.onConnect, self.onDisconnect, self.error, self.monitor)
         self.controller.start()
