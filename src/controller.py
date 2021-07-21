@@ -9,10 +9,11 @@ from commands import Commands
 from error import *
 
 class Controller(threading.Thread):
-    def __init__(self, config, log, onConnect, onDisconnect, onError):
+    def __init__(self, config, log, onConnect, onDisconnect, onError, monitor):
         threading.Thread.__init__(self, daemon = True)
         self.config = config
         self.log = log
+        self.monitor = monitor
         self.onConnect = onConnect
         self.onDisconnect = onDisconnect
         self.onError = onError
@@ -53,7 +54,7 @@ class Controller(threading.Thread):
             self.errorOut("Failed to connect to Twitch", e = e)
             return
 
-        self.execution = Execution(self.config, self.commands, self.irc, self.log)
+        self.execution = Execution(self.config, self.commands, self.irc, self.log, self.monitor)
 
         lastError = 0
         self.onConnect()

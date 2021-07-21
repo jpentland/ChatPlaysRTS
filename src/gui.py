@@ -7,6 +7,7 @@ import os
 import subprocess
 from threading import Lock
 from controller import Controller
+from monitor import Monitor
 
 class Gui:
     def __init__(self, master, config, log):
@@ -16,6 +17,9 @@ class Gui:
         self.username = tk.StringVar(master)
         self.oauth = tk.StringVar(master)
         self.remember = tk.IntVar(master)
+        self.selectedMonitor = tk.IntVar(master)
+        self.monitor = Monitor(config, log)
+        self.selectedMonitor.set(self.monitor.getSelectedMonitor())
         master.title("Chat Plays RTS")
 
         if "credentials" not in config:
@@ -33,6 +37,12 @@ class Gui:
         self.tprtsMenu.add_separator()
         self.tprtsMenu.add_command(label = "Quit", command = self.master.quit)
         self.menu.add_cascade(label = "ChatPlaysRTS", menu = self.tprtsMenu)
+
+        self.configMenu = tk.Menu(self.menu, tearoff = 0)
+        self.monitorMenu = tk.Menu(self.configMenu, tearoff = 0)
+        self.refreshMonitorMenu()
+        self.configMenu.add_cascade(label = "Monitor", menu = self.monitorMenu)
+        self.menu.add_cascade(label = "Config", menu = self.configMenu)
 
         self.helpMenu = tk.Menu(self.menu, tearoff = 0)
         self.helpMenu.add_command(label = "Readme", command = self.open_readme)
@@ -101,7 +111,7 @@ class Gui:
             self.config["credentials"]["remember"] = 1
             self.config.write()
 
-        self.controller = Controller(self.config, self.log, self.onConnect, self.onDisconnect, self.error)
+        self.controller = Controller(self.config, self.log, self.onConnect, self.onDisconnect, self.error, self.monitor)
         self.controller.start()
 
     def disconnect(self):
@@ -155,3 +165,13 @@ class Gui:
 
     def open_keys_list(self):
         self.openFile(os.path.join("doc", "keys.txt"))
+
+    def refreshMonitorMenu(self):
+        self.monitorMenu.delete(0, tk.END)
+        selected = self.monitor.getSelectedMonitor()
+        monitors = self.monitor.listMonitors()
+        for i, monitor in zip(range(len(monitors)), monitors):
+            self.monitorMenu.add_radiobutton(label = monitor, value = i, variable = self.selectedMonitor, command = self.onSelectMonitor)
+
+    def onSelectMonitor(self):
+        self.monitor.selectMonitor(self.selectedMonitor.get())

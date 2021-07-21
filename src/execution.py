@@ -6,9 +6,8 @@ pg.PAUSE = 0
 pg.FAILSAFE=False
 
 class Execution():
-    def __init__(self, config, commands, irc, log):
+    def __init__(self, config, commands, irc, log, monitor):
         self.config = config["execution"]
-        self.screenWidth, self.screenHeight = pg.size()
         self.reEval = re.compile("^\s*{(.*)}\s*$")
         self.lastClick = 0
         self.log = log
@@ -20,6 +19,7 @@ class Execution():
         self.timeout = self.config["timeout"]
         self.owner = config["credentials"]["username"]
         self.on = False
+        self.monitor = monitor
 
         self.operations = {
             "movemouse" : Execution.moveMouse,
@@ -125,17 +125,27 @@ class Execution():
 
     # Convert percentage coordinatre system to actual screen position
     def percentageToPixel(self, x, y):
-        return self.screenWidth * (x/100), self.screenHeight * (y/100)
+        width, height = self.monitor.getScreenSize()
+        xOff, yOff = self.monitor.getScreenOffset()
+        return width * (x/100) + xOff, height * (y/100) + yOff
+
+    # Convert percentage coordinatre system to pixel distance
+    def relPercentageToPixel(self, x, y):
+        width, height = self.monitor.getScreenSize()
+        return width * (x/100), height * (y/100)
 
     def keepInsideBorder(self, x, y):
-        if x < self.config["mouseBorder"]:
-            x = self.config["mouseBorder"]
-        if x > self.screenWidth - self.config["mouseBorder"]:
-            x = self.screenWidth - self.config["mouseBorder"]
-        if y < self.config["mouseBorder"]:
-            y = self.config["mouseBorder"]
-        if y > self.screenHeight - self.config["mouseBorder"]:
-            y = self.screenHeight - self.config["mouseBorder"]
+        border = self.config["mouseBorder"]
+        width, height = self.monitor.getScreenSize()
+        xOff, yOff = self.monitor.getScreenOffset()
+        if x < border + xOff:
+            x = border + xOff
+        if x > width - border + xOff:
+            x = width - border + xOff
+        if y < border + yOff:
+            y = border + yOff
+        if y > height - border + yOff:
+            y = height - border + yOff
 
         return x, y
 
@@ -147,7 +157,7 @@ class Execution():
 
     # Move mouse relatively
     def relMouse(self, x, y):
-        x, y = self.percentageToPixel(float(x), float(y))
+        x, y = self.relPercentageToPixel(float(x), float(y))
         px, py = pg.position()
         tx, ty = self.keepInsideBorder(px + x, py + y)
         pg.moveTo(tx, ty, 0.5, pg.easeInOutQuad)
@@ -160,7 +170,7 @@ class Execution():
 
     # Make box relatively
     def relBox(self, x, y):
-        x, y = self.percentageToPixel(float(x), float(y))
+        x, y = self.relPercentageToPixel(float(x), float(y))
         px, py = pg.position()
         tx, ty = self.keepInsideBorder(px + x, py + y)
         pg.dragTo(tx, ty, 0.5, pg.easeInOutQuad)

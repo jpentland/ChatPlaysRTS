@@ -17,6 +17,9 @@ defaultConfig = {
         },
         "log": {
             "logfile" : "output.log",
+        },
+        "monitor" : {
+            "monitor" : "ALL",
         }
 }
 
