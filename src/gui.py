@@ -157,10 +157,15 @@ class Gui:
 
     def refreshMonitorMenu(self):
         self.monitorMenu.delete(0, tk.END)
+        self.monitor.refresh()
         selected = self.monitor.getSelectedMonitor()
         monitors = self.monitor.listMonitors()
         for i, monitor in zip(range(len(monitors)), monitors):
             self.monitorMenu.add_radiobutton(label = monitor, value = i, variable = self.selectedMonitor, command = self.onSelectMonitor)
+        self.selectedMonitor.set(selected)
+
+        self.monitorMenu.add_separator()
+        self.monitorMenu.add_command(label = "Refresh", command = self.refreshMonitorMenu)
 
     def onSelectMonitor(self):
         self.monitor.selectMonitor(self.selectedMonitor.get())
