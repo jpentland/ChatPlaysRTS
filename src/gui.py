@@ -147,7 +147,7 @@ class Gui:
             self.error("Not implemented for your OS: %s" % os.name)
 
     def open_readme(self):
-        self.openFile("README.txt")
+        self.openFile("README.md")
 
     def open_commands_help(self):
         self.openFile(os.path.join("doc", "Commands.txt"))
