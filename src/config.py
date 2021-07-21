@@ -47,6 +47,7 @@ class Config:
         self.migrateOldConfig()
         self.data = self.loadConfig()
         self.deleteDeletedConfigs()
+        self.readCredentials()
 
     # Get contents of config file or defaultconfig if doesnt exist
     def loadConfig(self):
@@ -72,6 +73,46 @@ class Config:
 
         except FileNotFoundError:
             return defaultConfig
+
+    # Read credentials from toml
+    def readCredentials(self):
+        self.username = ""
+        self.oauth = ""
+        self.remember = False
+        if "credentials" in self.data:
+            credentials = self.data["credentials"]
+            if "username" in credentials:
+                self.username = credentials["username"]
+            if "oauth" in credentials:
+                self.oauth = credentials["oauth"]
+            if "remember" in credentials:
+                self.remember = credentials["remember"]
+
+    # Write credentials to toml
+    def writeCredentials(self):
+        if "credentials" not in self.data:
+            self.data["credentials"] = {}
+
+        self.data["credentials"]["username"] = self.username
+        self.data["credentials"]["oauth"] = self.oauth
+
+        self.write()
+
+    # Set currently used credentials
+    def setCredentials(self, username, oauth, remember):
+        self.username = username
+        self.oauth = oauth
+        self.remember = remember
+        if self.remember:
+            self.writeCredentials()
+
+    # Get currently used credentials
+    def getCredentials(self):
+        return self.username, self.oauth, self.remember
+
+    # Change remembering of credentials
+    def rememberCredentials(self, remember):
+        self.remember = remember
 
     # Migrate old config files from before rename
     def migrateOldConfig(self):
