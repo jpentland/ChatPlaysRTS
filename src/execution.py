@@ -6,7 +6,7 @@ pg.PAUSE = 0
 pg.FAILSAFE=False
 
 class Execution():
-    def __init__(self, config, commands, irc, log, monitor):
+    def __init__(self, config, commands, irc, log):
         self.config = config["execution"]
         self.reEval = re.compile("^\s*{(.*)}\s*$")
         self.lastClick = 0
@@ -19,7 +19,7 @@ class Execution():
         self.timeout = self.config["timeout"]
         self.owner = config["credentials"]["username"]
         self.on = False
-        self.monitor = monitor
+        self.monitor = config.monitor
 
         self.operations = {
             "movemouse" : Execution.moveMouse,

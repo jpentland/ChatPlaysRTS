@@ -3,6 +3,7 @@ import pathlib
 from appdirs import *
 from error import *
 from shutil import copytree, rmtree
+from monitor import Monitor
 
 defaultConfig = {
         "execution" : {
@@ -48,6 +49,7 @@ class Config:
         self.data = self.loadConfig()
         self.deleteDeletedConfigs()
         self.readCredentials()
+        self.monitor = Monitor(self, log)
 
     # Get contents of config file or defaultconfig if doesnt exist
     def loadConfig(self):

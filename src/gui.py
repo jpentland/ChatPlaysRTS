@@ -18,7 +18,7 @@ class Gui:
         self.oauth = tk.StringVar(master)
         self.remember = tk.IntVar(master)
         self.selectedMonitor = tk.IntVar(master)
-        self.monitor = Monitor(config, log)
+        self.monitor = self.config.monitor
         self.selectedMonitor.set(self.monitor.getSelectedMonitor())
         master.title("Chat Plays RTS")
 
@@ -100,7 +100,7 @@ class Gui:
 
         self.config.setCredentials(self.username.get(), self.oauth.get(), self.remember.get())
 
-        self.controller = Controller(self.config, self.log, self.onConnect, self.onDisconnect, self.error, self.monitor)
+        self.controller = Controller(self.config, self.log, self.onConnect, self.onDisconnect, self.error)
         self.controller.start()
 
     def disconnect(self):
