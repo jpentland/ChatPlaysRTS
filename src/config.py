@@ -24,6 +24,22 @@ defaultConfig = {
         }
 }
 
+configDescriptions = {
+        "execution" : {
+            "timeout" : "Start skipping commands if they are older than the following number of seconds",
+            "defaultDistance" : "Default distance in screen percentage to move the mouse for !mouseup !mousedown etc commands",
+            "mouseBorder" : "Size of border around screen where mouse cannot go (in pixels)",
+            "clickRateLimit" : "Minimum time in seconds between mouse clicks to prevent accidental doubleclicks",
+        },
+        "irc" : {
+            "domain" : "IRC server to connect to",
+            "port" : "IRC port number",
+        },
+        "log": {
+            "logfile" : "Where to store log file",
+        },
+}
+
 deletedConfigs = {
         "irc" : {
             "PING_MSG" : None,
@@ -75,6 +91,10 @@ class Config:
 
         except FileNotFoundError:
             return defaultConfig
+
+    # Get config descriptions
+    def getDescriptions(self):
+        return configDescriptions
 
     # Read credentials from toml
     def readCredentials(self):

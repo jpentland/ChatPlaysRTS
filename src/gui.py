@@ -8,6 +8,7 @@ import subprocess
 from threading import Lock
 from controller import Controller
 from monitor import Monitor
+from settingswindow import Settingswindow
 
 class Gui:
     def __init__(self, master, config, log):
@@ -38,6 +39,7 @@ class Gui:
         self.refreshMonitorMenu()
         self.configMenu.add_cascade(label = "Monitor", menu = self.monitorMenu)
         self.menu.add_cascade(label = "Config", menu = self.configMenu)
+        self.configMenu.add_command(label = "Settings", command = self.open_config)
 
         self.helpMenu = tk.Menu(self.menu, tearoff = 0)
         self.helpMenu.add_command(label = "Readme", command = self.open_readme)
@@ -169,3 +171,7 @@ class Gui:
 
     def onSelectMonitor(self):
         self.monitor.selectMonitor(self.selectedMonitor.get())
+
+    def open_config(self):
+        self.configWindow = Settingswindow(self.master, self.config)
+
