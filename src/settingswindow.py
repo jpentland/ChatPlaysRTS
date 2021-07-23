@@ -9,6 +9,7 @@ class Settingswindow(tk.Toplevel):
         self.config = config
         self.log = log
         self.vars = {}
+        self.callbacks = {}
         self.descriptors = config.getDescriptors()
         self.notebook = ttk.Notebook(self)
         self.buildSettings(self.notebook)
@@ -28,7 +29,11 @@ class Settingswindow(tk.Toplevel):
         self.gridSize = 0
         for section in self.config.data:
             self.vars[section] = {}
+            self.callbacks[section] = {}
             self.buildSection(section, notebook)
+
+    def validate(self, regex, string):
+        return regex.match(string) != None
 
     def buildSection(self, section, notebook):
         if section not in self.descriptors:
@@ -45,6 +50,7 @@ class Settingswindow(tk.Toplevel):
     def buildSetting(self, section, setting, frame):
         try:
             description = self.descriptors[section][setting]["description"]
+            regex = self.descriptors[section][setting]["regex"]
         except KeyError:
             return
 
@@ -52,6 +58,7 @@ class Settingswindow(tk.Toplevel):
         label = tk.Label(frame, text = setting, font = ('Arial', 10, 'bold'), justify = tk.LEFT)
         self.vars[section][setting] = tk.StringVar(self)
         self.vars[section][setting].set(self.config[section][setting])
+        self.callbacks[section][setting] = self.register(lambda string : self.validate(regex, string))
         entry = tk.Entry(frame, textvariable = self.vars[section][setting])
         descriptionLabel = tk.Label(frame, text = description, wraplength = 400, justify = tk.LEFT, font = ('Arial', 10, 'italic'))
         if frame.gridSize != 2:
@@ -59,6 +66,7 @@ class Settingswindow(tk.Toplevel):
             sep.grid(row = frame.gridSize - 1, column = 1, columnspan = 3, sticky = "ew")
         label.grid(row = frame.gridSize, column = 1, sticky = tk.E, padx = 5, pady =5)
         entry.grid(row = frame.gridSize, column = 2, sticky = tk.W, pady = 5)
+        entry.configure(validate = "key", validatecommand = (self.callbacks[section][setting], '%P'))
         descriptionLabel.grid(row = frame.gridSize, column = 3, sticky = tk.W, padx = 5, pady = 5)
 
     def cancel(self):
