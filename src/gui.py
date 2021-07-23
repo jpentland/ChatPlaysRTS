@@ -173,5 +173,5 @@ class Gui:
         self.monitor.selectMonitor(self.selectedMonitor.get())
 
     def open_config(self):
-        self.configWindow = Settingswindow(self.master, self.config)
+        self.configWindow = Settingswindow(self.master, self.log, self.config)
 

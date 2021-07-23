@@ -2,11 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 
 class Settingswindow(tk.Toplevel):
-    def __init__(self, master, config):
+    def __init__(self, master, log, config):
         super().__init__(master)
         self.title("Settings")
         self.master = master
         self.config = config
+        self.log = log
         self.vars = {}
         self.descriptions = config.getDescriptions()
         self.settingsFrame = tk.Frame(self, relief = tk.GROOVE, borderwidth = 1)
