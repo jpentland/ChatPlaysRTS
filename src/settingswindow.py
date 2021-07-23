@@ -9,7 +9,7 @@ class Settingswindow(tk.Toplevel):
         self.config = config
         self.log = log
         self.vars = {}
-        self.descriptions = config.getDescriptions()
+        self.descriptors = config.getDescriptors()
         self.notebook = ttk.Notebook(self)
         self.buildSettings(self.notebook)
         self.applyFrame = tk.Frame(self, padx = 5, pady = 5)
@@ -31,7 +31,7 @@ class Settingswindow(tk.Toplevel):
             self.buildSection(section, notebook)
 
     def buildSection(self, section, notebook):
-        if section not in self.descriptions:
+        if section not in self.descriptors:
             return
 
         sectionFrame = ttk.Frame(notebook, relief = tk.GROOVE, borderwidth = 1)
@@ -44,7 +44,7 @@ class Settingswindow(tk.Toplevel):
 
     def buildSetting(self, section, setting, frame):
         try:
-            description = self.descriptions[section][setting]
+            description = self.descriptors[section][setting]["description"]
         except KeyError:
             return
 
