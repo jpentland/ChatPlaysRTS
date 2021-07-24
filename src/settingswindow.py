@@ -73,11 +73,15 @@ class Settingswindow(tk.Toplevel):
         self.destroy()
 
     def apply(self):
-        self.log.log("Updating config not implemented")
+        for section in self.vars:
+            for value in self.vars[section]:
+                convert = self.descriptors[section][value]["convert"]
+                self.config[section][value] = convert(self.vars[section][value].get())
+        self.config.write()
 
     def ok(self):
         self.apply()
-        self.cancel()
+        self.destroy()
 
     def default(self):
         self.log.log("Reset default not implemented")
