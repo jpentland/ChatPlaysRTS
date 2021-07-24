@@ -28,17 +28,45 @@ defaultConfig = {
 
 configDescriptors = {
         "execution" : {
-            "timeout" : { "description" : "Start skipping commands if they are older than the following number of seconds", "regex" : re.compile("^[0-9\.]+$") },
-            "defaultDistance" : { "description" : "Default distance in screen percentage to move the mouse for !mouseup !mousedown etc commands", "regex" : re.compile("^[0-9\.]+$") },
-            "mouseBorder" : { "description" : "Size of border around screen where mouse cannot go (in pixels)", "regex" : re.compile("^[0-9]+$") },
-            "clickRateLimit" : { "description" : "Minimum time in seconds between mouse clicks to prevent accidental doubleclicks", "regex" : re.compile("^[0-9]+$") },
+            "timeout" : {
+                "description" : "Start skipping commands if they are older than the following number of seconds",
+                "regex" : re.compile("^[0-9\.]+$"),
+                "convert" : float
+            },
+            "defaultDistance" : {
+                "description" : "Default distance in screen percentage to move the mouse for !mouseup !mousedown etc commands",
+                "regex" : re.compile("^[0-9\.]+$"),
+                "convert" : float
+            },
+            "mouseBorder" : {
+                "description" : "Size of border around screen where mouse cannot go (in pixels)",
+                "regex" : re.compile("^[0-9]+$"),
+                "convert" : int
+            },
+            "clickRateLimit" : {
+                "description" : "Minimum time in seconds between mouse clicks to prevent accidental doubleclicks",
+                "regex" : re.compile("^[0-9\.]+$"),
+                "convert" : float
+            },
         },
         "irc" : {
-            "domain" : { "description" : "IRC server to connect to", "regex" : re.compile("^[a-zA-Z0-9\.]+$") },
-            "port" : { "description" : "IRC port number", "regex" : re.compile("^[0-9]+$") },
+            "domain" : {
+                "description" : "IRC server to connect to",
+                "regex" : re.compile("^[a-zA-Z0-9\.]+$"),
+                "convert" : str
+            },
+            "port" : {
+                "description" : "IRC port number",
+                "regex" : re.compile("^[0-9]+$"),
+                "convert" : int
+            },
         },
         "log": {
-            "logfile" : { "description" : "Where to store log file", "regex" : re.compile(".*") },
+            "logfile" : {
+                "description" : "Where to store log file",
+                "regex" : re.compile(".*"),
+                "convert" : str
+            },
         },
 }
 
