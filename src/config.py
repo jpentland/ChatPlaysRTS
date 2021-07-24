@@ -5,6 +5,7 @@ from appdirs import *
 from error import *
 from shutil import copytree, rmtree
 from monitor import Monitor
+from threading import RLock
 
 defaultConfig = {
         "execution" : {
@@ -56,6 +57,7 @@ class Config:
     def __init__(self, appname, appauthor, log):
         self.appname = appname
         self.appauthor = appauthor
+        self.lock = RLock()
         self.log = log
         self.config_dir = user_data_dir(appname, appauthor)
         self.config_file = "config.toml"
@@ -68,7 +70,17 @@ class Config:
         self.readCredentials()
         self.monitor = Monitor(self, log)
 
+    # Decorator for sync
+    def sync(fn):
+        def syncfn(self, *args, **kwargs):
+            with self.lock:
+                result = fn(self, *args, **kwargs)
+            return result
+
+        return syncfn
+
     # Get contents of config file or defaultconfig if doesnt exist
+    @sync
     def loadConfig(self):
         try:
             with open(os.path.join(self.config_dir, self.config_file)) as configFile:
@@ -98,6 +110,7 @@ class Config:
         return configDescriptors
 
     # Read credentials from toml
+    @sync
     def readCredentials(self):
         self.username = ""
         self.oauth = ""
@@ -112,6 +125,7 @@ class Config:
                 self.remember = credentials["remember"]
 
     # Write credentials to toml
+    @sync
     def writeCredentials(self):
         if "credentials" not in self.data:
             self.data["credentials"] = {}
@@ -122,6 +136,7 @@ class Config:
         self.write()
 
     # Set currently used credentials
+    @sync
     def setCredentials(self, username, oauth, remember):
         self.username = username
         self.oauth = oauth
@@ -130,14 +145,17 @@ class Config:
             self.writeCredentials()
 
     # Get currently used credentials
+    @sync
     def getCredentials(self):
         return self.username, self.oauth, self.remember
 
     # Change remembering of credentials
+    @sync
     def rememberCredentials(self, remember):
         self.remember = remember
 
     # Migrate old config files from before rename
+    @sync
     def migrateOldConfig(self):
         OLD_APPNAME = "TwitchPlaysRTS"
         OLD_APPAUTHOR = "TwitchPlaysRTS"
@@ -149,6 +167,7 @@ class Config:
                 rmtree(OLD_PATH)
 
     # Delete deleted configs from config
+    @sync
     def deleteDeletedConfigs(self):
         count = 0
         for k, v in deletedConfigs.items():
@@ -168,6 +187,7 @@ class Config:
             self.write()
 
     # Write config to disk
+    @sync
     def write(self):
         config_path = os.path.join(self.config_dir, self.config_file)
         self.log.log("Write config to %s" % config_path)
@@ -176,14 +196,17 @@ class Config:
             toml.dump(self.data, configFile)
 
     # Pass through self.data
+    @sync
     def __getitem__(self, key):
         return self.data[key]
 
     # Pass through self.data
+    @sync
     def __setitem__(self, key, item):
         self.data[key] = item
 
     # Pass through self.data
+    @sync
     def __contains__(self, key):
         return key in self.data
 
