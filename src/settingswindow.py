@@ -37,6 +37,7 @@ class Settingswindow(tk.Toplevel):
 
     def buildSection(self, section, notebook):
         if section not in self.descriptors:
+            self.log.log(f"No descriptor for {section}", echo = False)
             return
 
         sectionFrame = ttk.Frame(notebook, relief = tk.GROOVE, borderwidth = 1)
@@ -52,6 +53,7 @@ class Settingswindow(tk.Toplevel):
             description = self.descriptors[section][setting]["description"]
             regex = self.descriptors[section][setting]["regex"]
         except KeyError:
+            self.log.log(f"No descriptor for {section} -> {setting}", echo = False)
             return
 
         frame.gridSize += 2
