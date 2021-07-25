@@ -58,17 +58,27 @@ class Settingswindow(tk.Toplevel):
 
         frame.gridSize += 2
         label = tk.Label(frame, text = setting, font = ('Arial', 10, 'bold'), justify = tk.LEFT)
-        self.vars[section][setting] = tk.StringVar(self)
+
+        if self.descriptors[section][setting]["convert"] != bool:
+            self.vars[section][setting] = tk.StringVar(self)
+            entry = tk.Entry(frame, textvariable = self.vars[section][setting])
+            entry.grid(row = frame.gridSize, column = 2, sticky = tk.W, pady = 5)
+
+            if regex != None:
+                self.callbacks[section][setting] = self.register(lambda string : self.validate(regex, string))
+                entry.configure(validate = "key", validatecommand = (self.callbacks[section][setting], '%P'))
+        else:
+            self.vars[section][setting] = tk.BooleanVar(self)
+            checkButton = tk.Checkbutton(frame, variable = self.vars[section][setting])
+            checkButton.grid(row = frame.gridSize, column = 2, sticky = tk.W, pady = 5)
+
         self.vars[section][setting].set(self.config[section][setting])
-        self.callbacks[section][setting] = self.register(lambda string : self.validate(regex, string))
-        entry = tk.Entry(frame, textvariable = self.vars[section][setting])
+
         descriptionLabel = tk.Label(frame, text = description, wraplength = 400, justify = tk.LEFT, font = ('Arial', 10, 'italic'))
         if frame.gridSize != 2:
             sep = ttk.Separator(frame, orient = 'horizontal')
             sep.grid(row = frame.gridSize - 1, column = 1, columnspan = 3, sticky = "ew")
         label.grid(row = frame.gridSize, column = 1, sticky = tk.E, padx = 5, pady =5)
-        entry.grid(row = frame.gridSize, column = 2, sticky = tk.W, pady = 5)
-        entry.configure(validate = "key", validatecommand = (self.callbacks[section][setting], '%P'))
         descriptionLabel.grid(row = frame.gridSize, column = 3, sticky = tk.W, padx = 5, pady = 5)
 
     def cancel(self):
