@@ -84,4 +84,10 @@ class Settingswindow(tk.Toplevel):
         self.destroy()
 
     def default(self):
-        self.log.log("Reset default not implemented")
+        for section in self.vars:
+            for value in self.vars[section]:
+                default = self.config.getDefault()
+                try:
+                    self.vars[section][value].set(default[section][value])
+                except KeyError:
+                    self.log.log(f"No default value for {section} -> {value}")
