@@ -69,7 +69,8 @@ class Execution():
     def processCommandQueue(self):
 
         self.on = True
-        self.irc.sendMessage("Chat control has started!")
+        if self.config["sendStartMessage"]:
+            self.irc.sendMessage(self.config["startMessage"])
 
         while(True):
             epoch, sender, command = self.irc.receive()
@@ -77,11 +78,13 @@ class Execution():
             if sender == self.owner:
                 match = self.reStart.match(command)
                 if match:
-                    self.irc.sendMessage("Chat control has started!")
+                    if self.config["sendStartMessage"]:
+                        self.irc.sendMessage(self.config["startMessage"])
                     self.on = True
                 match = self.reStop.match(command)
                 if match:
-                    self.irc.sendMessage("Chat control has stopped!")
+                    if self.config["sendStartMessage"]:
+                        self.irc.sendMessage(self.config["stopMessage"])
                     self.on = False
 
             if self.on:
