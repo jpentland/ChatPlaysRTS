@@ -70,7 +70,7 @@ class Settingswindow(tk.Toplevel):
         else:
             self.vars[section][setting] = tk.BooleanVar(self)
             checkButton = tk.Checkbutton(frame, variable = self.vars[section][setting])
-            checkButton.grid(row = frame.gridSize, column = 2, sticky = tk.W, pady = 5)
+            checkButton.grid(row = frame.gridSize, column = 2, sticky = tk.E, pady = 5)
 
         self.vars[section][setting].set(self.config[section][setting])
 
