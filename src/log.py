@@ -35,9 +35,10 @@ class Log():
     def logTime(self):
         return strftime("%H:%M:%S")
 
-    # Write a message to the log file with optional echo to callback and console
+    # Write a message to the log file with optional echo to callback
     # save to buffer first if log file not open yet
     def log(self, message, echo = True):
+        print(message)
         with self.lock:
             if self.logfile != None:
                 try:
@@ -48,13 +49,10 @@ class Log():
                     self.log_exception(e)
 
                 if echo:
-                    print(message)
                     for cb in self.callbacks:
                         cb(message)
 
             else:
-                if echo:
-                    print(message)
                 self.buffer.append((message, echo))
 
     # Flush buffer to newly opened log file
