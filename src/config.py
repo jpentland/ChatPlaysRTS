@@ -137,6 +137,10 @@ class Config:
     def getDescriptors(self):
         return configDescriptors
 
+    # Get config defaults
+    def getDefault(self):
+        return defaultConfig
+
     # Read credentials from toml
     @sync
     def readCredentials(self):
