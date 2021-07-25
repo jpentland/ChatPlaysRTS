@@ -13,6 +13,9 @@ defaultConfig = {
             "defaultDistance" : 10,
             "mouseBorder" : 11,
             "clickRateLimit" : 0.5,
+            "startMessage" : "Chat control has started!",
+            "stopMessage" : "Chat control has stopped!",
+            "sendStartMessage" : True
         },
         "irc" : {
             "domain" : "irc.chat.twitch.tv",
@@ -47,6 +50,21 @@ configDescriptors = {
                 "description" : "Minimum time in seconds between mouse clicks to prevent accidental doubleclicks",
                 "regex" : re.compile("^[0-9\.]+$"),
                 "convert" : float
+            },
+            "startMessage" : {
+                "description" : "Chat message to send when what control starts",
+                "regex" : None,
+                "convert" : str
+            },
+            "stopMessage" : {
+                "description" : "Chat message to send when what control stops",
+                "regex" : None,
+                "convert" : str
+            },
+            "sendStartMessage" : {
+                "description" : "Send chat message",
+                "regex" : None,
+                "convert" : bool
             },
         },
         "irc" : {
