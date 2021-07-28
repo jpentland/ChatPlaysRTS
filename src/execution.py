@@ -16,10 +16,13 @@ class Execution():
         self.irc = irc
         self.reStart = re.compile("^!startcontrol\s*$")
         self.reStop = re.compile("^!stopcontrol\s*$")
+        self.reRestrict = re.compile("^!restrict ([a-z\-,]+)\s*$")
+        self.reUnrestrict = re.compile("^!unrestrict")
         self.timeout = self.config["timeout"]
         self.owner = config["credentials"]["username"]
         self.on = False
         self.monitor = config.monitor
+        self.restrict = None
 
         self.operations = {
             "movemouse" : Execution.moveMouse,
@@ -52,14 +55,15 @@ class Execution():
     def commandAuthorized(self, command, badges, bits):
 
         allowed = True
-        if "badges" in command:
+
+        if "badges" in command and set(command["badges"]).isdisjoint(set(badges)):
             allowed = False
-            for badge in badges:
-                if badge in command["badges"]:
-                    allowed = True
 
         if "bits" in command and bits < int(command["bits"]):
-                allowed = False
+            allowed = False
+
+        if self.restrict != None and set(self.restrict).isdisjoint(set(badges)):
+            allowed = False
 
         return allowed
 
@@ -93,17 +97,34 @@ class Execution():
         while(True):
             epoch, sender, command, badges, bits = self.irc.receive()
 
-            if sender == self.owner:
+            # broadcaster and moderator only commands
+            if not set(badges).isdisjoint(set(["broadcaster", "moderator"])):
+
+                # !startcontrol
                 match = self.reStart.match(command)
                 if match:
                     if self.config["sendStartMessage"]:
                         self.irc.sendMessage(self.config["startMessage"])
                     self.on = True
+
+                # !stopcontrol
                 match = self.reStop.match(command)
                 if match:
                     if self.config["sendStartMessage"]:
                         self.irc.sendMessage(self.config["stopMessage"])
                     self.on = False
+
+                # !restrict
+                match = self.reRestrict.match(command)
+                if match:
+                    self.irc.sendMessage(f"Chat controls restricted to: {match.group(1)}")
+                    self.restrict = match.group(1).split(",")
+
+                # !unrestrict
+                match = self.reUnrestrict.match(command)
+                if match:
+                    self.irc.sendMessage("Chat control unrestricted")
+                    self.restrict = None
 
             if self.on:
                 age = time.time() - epoch
