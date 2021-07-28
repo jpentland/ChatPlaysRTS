@@ -31,19 +31,37 @@ class Execution():
         }
 
     # Process an incoming command at runtime
-    def processCommand(self, message):
+    def processCommand(self, message, badges, bits):
         message = message.lower()
         for command in self.commands:
             match = command["re"].match(message)
             if match != None:
-                self.log.log("Got command: %s" % message)
-                if type(command["operation"]) is str:
-                    self.performSingleOperation(command, match)
-                elif type(command["operation"]) is list:
-                    self.performMultipleOperations(command, match)
+                if self.commandAuthorized(command, badges, bits):
+                    self.log.log(f"Got command: {message}")
+                    if type(command["operation"]) is str:
+                        self.performSingleOperation(command, match)
+                    elif type(command["operation"]) is list:
+                        self.performMultipleOperations(command, match)
+                    else:
+                        raise TomlError("Invalid operation type")
+                    break
                 else:
-                    raise TomlError("Invalid operation type")
-                break
+                    self.log.log(f"Command not allowed: {message}")
+
+    # Check whether command is authorized (required badges or min bits)
+    def commandAuthorized(self, command, badges, bits):
+
+        allowed = True
+        if "badges" in command:
+            allowed = False
+            for badge in badges:
+                if badge in command["badges"]:
+                    allowed = True
+
+        if "bits" in command and bits < int(command["bits"]):
+                allowed = False
+
+        return allowed
 
     # Perform a single operation (legacy format)
     def performSingleOperation(self, command, match):
@@ -90,7 +108,7 @@ class Execution():
             if self.on:
                 age = time.time() - epoch
                 if age < self.timeout:
-                    self.processCommand(command)
+                    self.processCommand(command, badges, bits)
                 else:
                     self.log.log("Skipped a command, took too long to come in (%d seconds)" % age)
 
