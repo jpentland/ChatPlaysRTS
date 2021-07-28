@@ -22,9 +22,11 @@ If you just want to add some basic commands, without using fancy regex features,
 
 [[command]]
 regex = "!centermouse"
+
+[[command.action]]
 action = "movemouse"
 
-[command.params]
+[command.action.params]
 x = "50"
 y = "50"
 
@@ -32,18 +34,22 @@ y = "50"
 
 [[command]]
 regex = "!towncenter"
+
+[[command.action]]
 action = "presskey"
 
-[command.params]
+[command.action.params]
 key = "h"
 
 * Pressing a key and holding shift (also works with alt and ctrl)
 
 [[command]]
 regex = "!allidles"
+
+[[command.action]]
 action = "presskey"
 
-[command.params]
+[command.action.params]
 key = "."
 shift = true
 
@@ -51,20 +57,64 @@ shift = true
 
 [[command]]
 regex = "!leftup"
+
+[[command.action]]
 action = "presskey"
 
-[command.params]
+[command.action.params]
 key = ["left", "up"]
 
 * Holding down a key (duration is in seconds)
 
 [[command]]
 regex = "!north"
+
+[[command.action]]
 action = "presskey"
 
-[command.params]
+[command.action.params]
 key = "up"
 duration = "1"
+
+* Clicking the mouse
+
+[[command]]
+regex = "!click"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+* Performing multiple actions in one command:
+
+[[command]]
+regex = "!buildfarm"
+
+[[command.action]]
+action = "key"
+
+[command.action.params]
+key = "."
+
+[[command.action]]
+action = "key"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "key"
+
+[command.action.params]
+key = "a"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
 
 -----------------------
 Command structure
@@ -74,23 +124,26 @@ A command in the "usercommands.toml" file looks like this:
 
 [[command]]
 regex = "regex"
+
+[[command.action]]
 action = "action"
 
-[command.params]
+[command.action.params]
 param1 = value
 param2 = value
 
 There are three main parts:
 
 * Regex
-        - The regex is the command itself, which viewers should type in chat.
+      - The regex is the command itself, which viewers should type in chat.
         This regular expression can also contain special characters for finding parameters such as numbers which can be typed by the viewers. Some examples would be "!click" or "!mouseup ([0-9]+)"
 
 * Action
-        - This is the action that gets performed when the command is triggered by players. Several actions are available, and are listed lower down in this document.
+      - This is the action that gets performed when the command is triggered by players. Several actions are available, and are listed lower down in this document.
+      - Multiple actions can be supplied by repeating the action and params section.
 
 * Parameters
-        - Parameters are specific to each action, and can be mandatory or optional. An example or a parameter would be the coordinates that the mouse should move to, for a mouseMouse action.
+      - Parameters are specific to each action, and can be mandatory or optional. An example or a parameter would be the coordinates that the mouse should move to, for a mouseMouse action.
 
 ------------
 Restrictions
@@ -156,7 +209,7 @@ Parameters
 Parameters can be direct values, or expressions, which must be surrounded by braces: {}
 
 E.g:
-[command.params]
+[command.action.params]
 param1 = 5          # This is just the number 5
 param2 = "{4 + 9}"  # This will be calculated when running the program
 
@@ -165,15 +218,17 @@ Regex groups can be created using brackets, (), and accessed in parameters by us
 E.g:
 [[command]]
 regex = "!mouse ([0-9\\.]+) ([0-9\\.]+)"
+
+[[command.action]]
 action = "moveMouse"
 
-[command.params]
+[command.action.params]
 x = "{group[0]}"
 y = "{group[1]}"
 
 Configuration parameters can also be accessed via the config dictionary, E.g:
 
-[command.params]
+[command.action.params]
 x = "{config['defaultDistance']}"
 y = "{config['defaultDistance']}"
 
