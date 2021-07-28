@@ -73,7 +73,7 @@ class Execution():
             self.irc.sendMessage(self.config["startMessage"])
 
         while(True):
-            epoch, sender, command = self.irc.receive()
+            epoch, sender, command, badges, bits = self.irc.receive()
 
             if sender == self.owner:
                 match = self.reStart.match(command)
