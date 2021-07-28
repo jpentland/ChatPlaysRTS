@@ -52,7 +52,7 @@ configDescriptors = {
                 "convert" : float
             },
             "sendStartMessage" : {
-                "description" : "If selected, the chat message will be sent on start/stop of chat control.",
+                "description" : "If selected, the chat message will be sent on connect.",
                 "regex" : None,
                 "convert" : bool
             },

@@ -103,15 +103,13 @@ class Execution():
                 # !startcontrol
                 match = self.reStart.match(command)
                 if match:
-                    if self.config["sendStartMessage"]:
-                        self.irc.sendMessage(self.config["startMessage"])
+                    self.irc.sendMessage(self.config["startMessage"])
                     self.on = True
 
                 # !stopcontrol
                 match = self.reStop.match(command)
                 if match:
-                    if self.config["sendStartMessage"]:
-                        self.irc.sendMessage(self.config["stopMessage"])
+                    self.irc.sendMessage(self.config["stopMessage"])
                     self.on = False
 
                 # !restrict
