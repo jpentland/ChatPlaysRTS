@@ -4,6 +4,12 @@ Version 0.12
 * Support multiple operations in commands (see commands.txt)
 * For multi-monitor setups: Control can be restricted to a single monitor from
 the new config menu
+* New config window to allow changing basic config options
+* Moderators can now use the !startcontrol and !stopcontrol commands
+* Custom commands can be restricted to users with certain badges (eg,
+moderator, vip, subscriber, broadcaster)
+* broadcaster, moderators may use !restrict and !unrestrict to temporarily
+restrict all commands to certain badges.
 * Improvements to console logging
 
 Version 0.11
