@@ -22,8 +22,20 @@ This program is primarily targeted for Windows 10, however it should also work o
 4. Click Connect.
 4. Chat control will be started
 
-* To temporarily stop chat control, type the command !stopcontrol in chat
-* To restart chat control, type the command !startcontrol
+## Moderator commands
+
+### Special commands which can only be used by the streamer and moderators
+* !stopcontrol
+        - Temporarily stop responding to all commands (except moderator commands)
+* !startcontrol
+        - Start responding to commands again
+* !restrict [badges]
+        - Temporarily restrict all commands to users with given badges. E.g.
+          "!restrict subscriber,vip,moderator" allows commands to only be used by subscribers, vips and moderators.
+        - This will be reset when disconnecting/reconnecting or closing
+          the program
+* !unrestrict
+        - Remove restrictions added by the !restrict command
 
 ## Custom Commmands
 
@@ -63,7 +75,6 @@ This program is primarily targeted for Windows 10, however it should also work o
 ## Note:
 * !movemouse moves the mouse to an exact coordinate on the screen, which is a percentage of the screen size. So !movemouse 50 50 will move to the center of the screen.
 * Mouse movement commands won't move the mouse all the way to the edge of the screen, to prevent accidental scrolling.
-* The !startcontrol and !stopcontrol commands only work for the streamer
 * The commands !mouseup, !mousedown, !boxdownleft, !boxupright etc can also take an optional distance.
 * The config file is located in: C:\Users\\<username>\AppData\Local\ChatPlaysRTS\ChatPlaysRTS\config.toml, which stores credentials and other information.
 * If you have any problems, please send the output.log file to a developer.
