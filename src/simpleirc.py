@@ -13,7 +13,7 @@ class SimpleIrc(threading.Thread):
         self.channel = "#" + self.username
         self.domain = config["irc"]["domain"]
         self.port = config["irc"]["port"]
-        self.reMessage = re.compile(":([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
+        self.reMessage = re.compile("@(.*):([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
         self.commandQueue = Queue()
         self.log = log
         self.connected = False
@@ -57,6 +57,7 @@ class SimpleIrc(threading.Thread):
         self.send('PASS ' + self.oauth)
         self.send('NICK ' + self.username)
         self.send('JOIN ' + self.channel)
+        self.send('CAP REQ :twitch.tv/tags')
         while True:
             message = self.server.recv(2048).decode('utf-8')
             if len(message) == 0:
@@ -86,49 +87,89 @@ class SimpleIrc(threading.Thread):
 
         while True:
             try:
-                message = self.server.recv(2048).decode('utf-8')
-                if len(message) == 0:
+                string = self.server.recv(2048).decode('utf-8')
+                if len(string) == 0:
                     self.log.log("Connection to %s terminated" % self.domain)
                     self.commandQueue.put((time.time(), None, "Disconnected"))
                     self.connected = False
                     self.server.close()
                     return
 
-                elif (message[:4] == "PING"):
-                    self.log.log("Got ping: %s" % repr(message))
-                    pong = "PONG" + message[4:]
+                elif (string[:4] == "PING"):
+                    self.log.log("Got ping: %s" % repr(string))
+                    pong = "PONG" + string[4:]
                     self.log.log("Responding to PING")
                     self.log.log("Responding: %s" % repr(pong))
                     self.send(pong)
 
                 else:
-                    match = self.reMessage.match(message)
-                    if match != None:
-                        self.log.log("%s: %s" % (match.group(1), match.group(2)))
-                        self.commandQueue.put((time.time(), match.group(1), match.group(2)))
+                    result = self.parse_privmsg(string)
+                    if result != None:
+                        username, message, badges, bits = result
+                        self.log_privmsg(username, message, badges, bits)
+                        self.commandQueue.put((time.time(), username, (message, badges, bits)))
                     else:
-                        self.log.log(message)
+                        self.log.log(string)
 
             except Exception as error:
-                self.log.log(e)
+                self.log.log(error)
                 self.commandQueue.put((time.time(), None, error.args))
                 self.server.close()
                 self.connected = False
                 return
 
+    def log_privmsg(self, username, message, badges, bits):
+        badgelog = ""
+        for badge in badges:
+            badgelog += f"{badge},"
+        badgelog = badgelog[:-1]
+
+        message = f"[{badgelog}] {username}: {message}"
+        if bits > 0:
+            message += f" [BITS: {bits}]"
+
+        self.log.log(message)
+
+    def parse_privmsg(self, string):
+        match = self.reMessage.match(string)
+        if match == None:
+            return None
+
+        taglist = match.group(1)
+        username = match.group(2)
+        message = match.group(3)
+
+        tags = {}
+        for tag in taglist.split(";"):
+             kv = tag.split("=")
+             tags[kv[0]] = kv[1]
+
+        badges = []
+        for badge in tags["badges"].split(","):
+            badges.append(badge.split("/")[0])
+
+        bits = 0
+        try:
+            bits = int(tags["bits"])
+        except KeyError:
+            pass
+
+        return username, message, badges, bits
 
     def send(self, string):
         self.server.send(bytes(string + '\r\n', 'utf-8'))
 
     def receive(self):
-        epoch, sender, command = self.commandQueue.get()
+        epoch, sender, info = self.commandQueue.get()
         if sender == None:
             if self.clientDisconnect == True:
                 raise ClientDisconnectError()
             else:
                 raise ConnectionFailedError(command)
 
-        return epoch, sender, command
+        message, badges, bits = info
+
+        return epoch, sender, message, badges, bits
 
     def close(self):
         self.clientDisconnect = True
