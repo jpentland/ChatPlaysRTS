@@ -4,9 +4,9 @@
 
 #   [[command]]
 #   regex = "regex"             # Regular expression to match the command typed in chat
-#   operation = "operation"     # operation to perform when command is detected
+#   action = "action"     # action to perform when command is detected
 
-#   [command.params]            # Parameters to operation
+#   [command.params]            # Parameters to action
 #   param1 = value
 #   param2 = value
 
@@ -22,7 +22,7 @@
 # E.g:
 #       [[command]]
 #       regex = "!mouse ([0-9\\.]+) ([0-9\\.]+)"
-#       operation = "moveMouse"
+#       action = "moveMouse"
 
 #               [command.params]
 #               x = "{group[0]}"
@@ -36,7 +36,7 @@
 
 # Configuration parameters are set in config.toml
 
-# Currently supported operations:
+# Currently supported actions:
 # * moveMouse
 #       - Moves mouse to a fixed location
 #       - required parameters: x, y
@@ -65,7 +65,7 @@
 
 [[command]]
 regex = "!(?:movemouse|mouse) ([0-9\\.]+) ([0-9\\.]+)"
-operation = "moveMouse"
+action = "moveMouse"
 
         [command.params]
         x = "{group[0]}"
@@ -73,7 +73,7 @@ operation = "moveMouse"
 
 [[command]]
 regex = "!box (-?[0-9\\.]+) (-?[0-9\\.]+)"
-operation = "box"
+action = "box"
 
         [command.params]
         x = "{group[0]}"
@@ -81,32 +81,32 @@ operation = "box"
 
 [[command]]
 regex = "!(?:click|leftclick)"
-operation = "click"
+action = "click"
 
 [[command]]
 regex = "!rightclick"
-operation = "click"
+action = "click"
 
         [command.params]
         button = "right"
 
 [[command]]
 regex = "!middleclick"
-operation = "click"
+action = "click"
 
         [command.params]
         button = "middle"
 
 [[command]]
 regex = "!doubleclick"
-operation = "click"
+action = "click"
 
         [command.params]
         clicks = 2
 
 [[command]]
 regex = "!mouseup"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = 0
@@ -114,7 +114,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseup ([0-9\\.]+)"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = 0
@@ -122,7 +122,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mousedown"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = 0
@@ -130,7 +130,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mousedown ([0-9\\.]+)"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = 0
@@ -138,7 +138,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseleft"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{-config['defaultDistance']}"
@@ -146,7 +146,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseleft ([0-9\\.]+)"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{-group[0]}"
@@ -154,7 +154,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseright"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{config['defaultDistance']}"
@@ -162,7 +162,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseright ([0-9\\.]+)"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{group[0]}"
@@ -170,7 +170,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseupleft"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{-config['defaultDistance']}"
@@ -178,7 +178,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseupleft ([0-9\\.]+)"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{-group[0]}"
@@ -186,7 +186,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseupright"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{config['defaultDistance']}"
@@ -194,7 +194,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mouseupright ([0-9\\.]+)"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{group[0]}"
@@ -202,7 +202,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mousedownleft"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{-config['defaultDistance']}"
@@ -210,7 +210,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mousedownleft ([0-9\\.]+)"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{-group[0]}"
@@ -218,7 +218,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mousedownright"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{config['defaultDistance']}"
@@ -226,7 +226,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!mousedownright ([0-9\\.]+)"
-operation = "relMouse"
+action = "relMouse"
 
         [command.params]
         x = "{group[0]}"
@@ -234,7 +234,7 @@ operation = "relMouse"
 
 [[command]]
 regex = "!boxupleft"
-operation = "relbox"
+action = "relbox"
 
         [command.params]
         x = "{-config['defaultDistance']}"
@@ -242,7 +242,7 @@ operation = "relbox"
 
 [[command]]
 regex = "!boxupleft ([0-9\\.]+)"
-operation = "relbox"
+action = "relbox"
 
         [command.params]
         x = "{-group[0]}"
@@ -250,7 +250,7 @@ operation = "relbox"
 
 [[command]]
 regex = "!boxupright"
-operation = "relbox"
+action = "relbox"
 
         [command.params]
         x = "{config['defaultDistance']}"
@@ -258,7 +258,7 @@ operation = "relbox"
 
 [[command]]
 regex = "!boxupright ([0-9\\.]+)"
-operation = "relbox"
+action = "relbox"
 
         [command.params]
         x = "{group[0]}"
@@ -266,7 +266,7 @@ operation = "relbox"
 
 [[command]]
 regex = "!boxdownleft"
-operation = "relbox"
+action = "relbox"
 
         [command.params]
         x = "{-config['defaultDistance']}"
@@ -274,7 +274,7 @@ operation = "relbox"
 
 [[command]]
 regex = "!boxdownleft ([0-9\\.]+)"
-operation = "relbox"
+action = "relbox"
 
         [command.params]
         x = "{-group[0]}"
@@ -282,7 +282,7 @@ operation = "relbox"
 
 [[command]]
 regex = "!boxdownright"
-operation = "relbox"
+action = "relbox"
 
         [command.params]
         x = "{config['defaultDistance']}"
@@ -290,7 +290,7 @@ operation = "relbox"
 
 [[command]]
 regex = "!boxdownright ([0-9\\.]+)"
-operation = "relbox"
+action = "relbox"
 
         [command.params]
         x = "{group[0]}"
@@ -298,7 +298,7 @@ operation = "relbox"
 
 [[command]]
 regex = "!north"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = "up"
@@ -306,7 +306,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!east"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = "right"
@@ -314,7 +314,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!west"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = "left"
@@ -322,7 +322,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!south"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = "down"
@@ -330,7 +330,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!northeast"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = ["up", "right"]
@@ -338,7 +338,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!northwest"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = ["up", "left"]
@@ -346,7 +346,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!southeast"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = ["down", "right"]
@@ -354,7 +354,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!southwest"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = ["down", "left"]
@@ -362,7 +362,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!north ([0-9]+)"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = "up"
@@ -371,7 +371,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!east ([0-9]+)"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = "right"
@@ -380,7 +380,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!west ([0-9]+)"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = "left"
@@ -389,7 +389,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!south ([0-9]+)"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = "down"
@@ -398,7 +398,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!northeast ([0-9]+)"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = ["up", "right"]
@@ -407,7 +407,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!northwest ([0-9]+)"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = ["up", "left"]
@@ -416,7 +416,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!southeast ([0-9]+)"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = ["down", "right"]
@@ -425,7 +425,7 @@ operation = "presskey"
 
 [[command]]
 regex = "!southwest ([0-9]+)"
-operation = "presskey"
+action = "presskey"
 
 	[command.params]
 	key = ["down", "left"]

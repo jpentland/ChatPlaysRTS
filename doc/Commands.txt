@@ -22,7 +22,7 @@ If you just want to add some basic commands, without using fancy regex features,
 
 [[command]]
 regex = "!centermouse"
-operation = "movemouse"
+action = "movemouse"
 
 [command.params]
 x = "50"
@@ -32,7 +32,7 @@ y = "50"
 
 [[command]]
 regex = "!towncenter"
-operation = "presskey"
+action = "presskey"
 
 [command.params]
 key = "h"
@@ -41,7 +41,7 @@ key = "h"
 
 [[command]]
 regex = "!allidles"
-operation = "presskey"
+action = "presskey"
 
 [command.params]
 key = "."
@@ -51,7 +51,7 @@ shift = true
 
 [[command]]
 regex = "!leftup"
-operation = "presskey"
+action = "presskey"
 
 [command.params]
 key = ["left", "up"]
@@ -60,7 +60,7 @@ key = ["left", "up"]
 
 [[command]]
 regex = "!north"
-operation = "presskey"
+action = "presskey"
 
 [command.params]
 key = "up"
@@ -74,7 +74,7 @@ A command in the "usercommands.toml" file looks like this:
 
 [[command]]
 regex = "regex"
-operation = "operation"
+action = "action"
 
 [command.params]
 param1 = value
@@ -86,17 +86,43 @@ There are three main parts:
         - The regex is the command itself, which viewers should type in chat.
         This regular expression can also contain special characters for finding parameters such as numbers which can be typed by the viewers. Some examples would be "!click" or "!mouseup ([0-9]+)"
 
-* Operation
-        - This is the operation that gets performed when the command is triggered by players. Several operations are available, and are listed lower down in this document.
+* Action
+        - This is the action that gets performed when the command is triggered by players. Several actions are available, and are listed lower down in this document.
 
 * Parameters
-        - Parameters are specific to each operation, and can be mandatory or optional. An example or a parameter would be the coordinates that the mouse should move to, for a mouseMouse operation.
+        - Parameters are specific to each action, and can be mandatory or optional. An example or a parameter would be the coordinates that the mouse should move to, for a mouseMouse action.
+
+------------
+Restrictions
+------------
+
+Commands can be restricted to moderators, vips, or subscribers by adding an optional badges option to the command. E.g:
+
+[[command]]
+regex = "regex"
+action = "action"
+badges = "subscriber,moderator,vip"
+
+[command.params]
+param1 = value
+param2 = value
+
+Commands can also require a minimum number of bits to be used. E.g:
+
+[[command]]
+regex = "regex"
+action = "action"
+bits = 100
+
+[command.params]
+param1 = value
+param2 = value
 
 ----------
-Operations
+Actions
 ----------
 
-Currently supported operations:
+Currently supported actions:
 * moveMouse
       - Moves mouse to a fixed location
       - required parameters: x, y
@@ -139,7 +165,7 @@ Regex groups can be created using brackets, (), and accessed in parameters by us
 E.g:
 [[command]]
 regex = "!mouse ([0-9\\.]+) ([0-9\\.]+)"
-operation = "moveMouse"
+action = "moveMouse"
 
 [command.params]
 x = "{group[0]}"

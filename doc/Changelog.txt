@@ -1,7 +1,7 @@
 Version 0.12
 ------
 * Rename project to Chat Plays RTS (due to Twitch trademark)
-* Support multiple operations in commands (see commands.txt)
+* Support multiple actions in commands (see commands.txt)
 * For multi-monitor setups: Control can be restricted to a single monitor from
 the new config menu
 * New config window to allow changing basic config options

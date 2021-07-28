@@ -24,7 +24,7 @@ class Execution():
         self.monitor = config.monitor
         self.restrict = None
 
-        self.operations = {
+        self.actions = {
             "movemouse" : Execution.moveMouse,
             "click" : Execution.click,
             "relmouse" : Execution.relMouse,
@@ -41,12 +41,12 @@ class Execution():
             if match != None:
                 if self.commandAuthorized(command, badges, bits):
                     self.log.log(f"Got command: {message}")
-                    if type(command["operation"]) is str:
+                    if type(command["action"]) is str:
                         self.performSingleOperation(command, match)
-                    elif type(command["operation"]) is list:
+                    elif type(command["action"]) is list:
                         self.performMultipleOperations(command, match)
                     else:
-                        raise TomlError("Invalid operation type")
+                        raise TomlError("Invalid action type")
                     break
                 else:
                     self.log.log(f"Command not allowed: {message}")
@@ -67,21 +67,21 @@ class Execution():
 
         return allowed
 
-    # Perform a single operation (legacy format)
+    # Perform a single action (legacy format)
     def performSingleOperation(self, command, match):
-        op_func = self.parse_operation(command["operation"])
+        op_func = self.parse_action(command["action"])
         try:
             kwargs = self.processArgs(command["params"], match)
         except KeyError:
             kwargs = {}
         op_func(self, **kwargs)
 
-    # Perform multiple operations (new format)
+    # Perform multiple actions (new format)
     def performMultipleOperations(self, command, match):
-        for operation in command["operation"]:
-            op_func = self.parse_operation(operation["operation"])
+        for action in command["action"]:
+            op_func = self.parse_action(action["action"])
             try:
-                kwargs = self.processArgs(operation["params"], match)
+                kwargs = self.processArgs(action["params"], match)
             except KeyError:
                 kwargs = {}
 
@@ -160,8 +160,8 @@ class Execution():
         return newkwArgs
 
     # Parse function call and parameters as defined in command config
-    def parse_operation(self, fstring):
-        return self.operations[fstring.strip().lower()]
+    def parse_action(self, fstring):
+        return self.actions[fstring.strip().lower()]
 
     # Convert percentage coordinatre system to actual screen position
     def percentageToPixel(self, x, y):
