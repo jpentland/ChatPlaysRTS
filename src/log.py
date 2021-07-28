@@ -1,4 +1,4 @@
-from threading import Lock
+from threading import RLock
 from time import localtime, strftime
 import traceback as tb
 import pathlib
@@ -6,7 +6,7 @@ import os
 
 class Log():
     def __init__(self, config = None):
-        self.lock = Lock()
+        self.lock = RLock()
         self.callbacks = []
         self.buffer = []
         self.logfile = None
