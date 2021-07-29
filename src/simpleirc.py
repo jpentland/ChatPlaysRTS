@@ -54,65 +54,64 @@ class SimpleIrc(threading.Thread):
         self.log.log("Connecting...")
         self.server = socket.socket()
         self.server.connect(connection_data)
+        self.serverFile = self.server.makefile()
         self.send('PASS ' + self.oauth)
         self.send('NICK ' + self.username)
         self.send('JOIN ' + self.channel)
         self.send('CAP REQ :twitch.tv/tags')
         while True:
-            message = self.server.recv(2048).decode('utf-8')
+            message = self.serverFile.readline()
             if len(message) == 0:
                 raise Exception("connection failed")
 
-            for msg in message.split("\n"):
-                #Check for connected message
-                regex = ":[^ ]+ [0-9]+ " + self.username + " " + self.channel + " :End of /NAMES list"
-                if re.match(regex, msg):
-                    self.log.log("Connected")
-                    threading.Thread.start(self)
-                    return
+            #Check for connected message
+            regex = ":[^ ]+ [0-9]+ " + self.username + " " + self.channel + " :End of /NAMES list"
+            if re.match(regex, message):
+                self.log.log("Connected")
+                threading.Thread.start(self)
+                return
 
-                # Check for invalid oauth
-                regex = ".*Login authentication failed"
-                if re.match(regex, msg.strip()):
+            # Check for invalid oauth
+            regex = ".*Login authentication failed"
+            if re.match(regex, message.strip()):
+                raise AuthenticationError()
+
+            # Check for invalid username
+            # invalid username means wrong username will be returned from server
+            match = re.match(":[^ ]+ [0-9]+ (.*) :>", message)
+            if match != None:
+                if match.group(1) != self.username:
                     raise AuthenticationError()
-
-                # Check for invalid username
-                # invalid username means wrong username will be returned from server
-                match = re.match(":[^ ]+ [0-9]+ (.*) :>", msg)
-                if match != None:
-                    if match.group(1) != self.username:
-                        raise AuthenticationError()
 
     def run(self):
 
         while True:
             try:
-                recv = self.server.recv(2048).decode('utf-8')
-                if len(recv) == 0:
+                string = self.serverFile.readline()
+                if len(string) == 0:
                     self.log.log("Connection to %s terminated" % self.domain)
                     self.commandQueue.put((time.time(), None, "Disconnected"))
                     self.connected = False
                     self.server.close()
                     return
 
-                for string in recv.split("\n"):
-                    if (string[:4] == "PING"):
-                        self.log.log("Got ping: %s" % repr(string))
-                        pong = "PONG" + string[4:]
-                        self.log.log("Responding to PING")
-                        self.log.log("Responding: %s" % repr(pong))
-                        self.send(pong)
+                if (string[:4] == "PING"):
+                    self.log.log("Got ping: %s" % repr(string))
+                    pong = "PONG" + string[4:]
+                    self.log.log("Responding to PING")
+                    self.log.log("Responding: %s" % repr(pong))
+                    self.send(pong)
+                else:
+                    result = self.parse_privmsg(string)
+                    if result != None:
+                        username, message, badges, bits = result
+                        self.log_privmsg(username, message, badges, bits)
+                        self.commandQueue.put((time.time(), username, (message, badges, bits)))
                     else:
-                        result = self.parse_privmsg(string)
-                        if result != None:
-                            username, message, badges, bits = result
-                            self.log_privmsg(username, message, badges, bits)
-                            self.commandQueue.put((time.time(), username, (message, badges, bits)))
-                        else:
-                            self.log.log(string)
+                        self.log.log(string)
 
             except Exception as error:
-                self.log.log(error)
+                self.log.log_exception(error)
                 self.commandQueue.put((time.time(), None, error.args))
                 self.server.close()
                 self.connected = False
