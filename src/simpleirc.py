@@ -165,7 +165,7 @@ class SimpleIrc(threading.Thread):
             if self.clientDisconnect == True:
                 raise ClientDisconnectError()
             else:
-                raise ConnectionFailedError(command)
+                raise ConnectionFailedError(info)
 
         message, badges, bits = info
 
