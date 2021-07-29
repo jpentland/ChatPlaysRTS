@@ -87,29 +87,29 @@ class SimpleIrc(threading.Thread):
 
         while True:
             try:
-                string = self.server.recv(2048).decode('utf-8')
-                if len(string) == 0:
+                recv = self.server.recv(2048).decode('utf-8')
+                if len(recv) == 0:
                     self.log.log("Connection to %s terminated" % self.domain)
                     self.commandQueue.put((time.time(), None, "Disconnected"))
                     self.connected = False
                     self.server.close()
                     return
 
-                elif (string[:4] == "PING"):
-                    self.log.log("Got ping: %s" % repr(string))
-                    pong = "PONG" + string[4:]
-                    self.log.log("Responding to PING")
-                    self.log.log("Responding: %s" % repr(pong))
-                    self.send(pong)
-
-                else:
-                    result = self.parse_privmsg(string)
-                    if result != None:
-                        username, message, badges, bits = result
-                        self.log_privmsg(username, message, badges, bits)
-                        self.commandQueue.put((time.time(), username, (message, badges, bits)))
+                for string in recv.split("\n"):
+                    if (string[:4] == "PING"):
+                        self.log.log("Got ping: %s" % repr(string))
+                        pong = "PONG" + string[4:]
+                        self.log.log("Responding to PING")
+                        self.log.log("Responding: %s" % repr(pong))
+                        self.send(pong)
                     else:
-                        self.log.log(string)
+                        result = self.parse_privmsg(string)
+                        if result != None:
+                            username, message, badges, bits = result
+                            self.log_privmsg(username, message, badges, bits)
+                            self.commandQueue.put((time.time(), username, (message, badges, bits)))
+                        else:
+                            self.log.log(string)
 
             except Exception as error:
                 self.log.log(error)
