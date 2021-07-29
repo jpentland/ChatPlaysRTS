@@ -13,6 +13,7 @@ defaultConfig = {
             "defaultDistance" : 10,
             "mouseBorder" : 11,
             "clickRateLimit" : 0.5,
+            "mousespeed" : 0.5,
             "sendStartMessage" : True,
             "startMessage" : "Chat control has started!",
             "stopMessage" : "Chat control has stopped!"
@@ -55,6 +56,11 @@ configDescriptors = {
                 "description" : "If selected, the chat message will be sent on connect.",
                 "regex" : None,
                 "convert" : bool
+            },
+            "mousespeed" : {
+                "description" : "Time in seconds that it takes the mouse to move on mouse and box actions.",
+                "regex" : re.compile("^[0-9\.]+$"),
+                "convert" : float
             },
             "startMessage" : {
                 "description" : "Chat message to send when chat control starts",
