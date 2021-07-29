@@ -57,12 +57,12 @@ configDescriptors = {
                 "convert" : bool
             },
             "startMessage" : {
-                "description" : "Chat message to send when what control starts",
+                "description" : "Chat message to send when chat control starts",
                 "regex" : None,
                 "convert" : str
             },
             "stopMessage" : {
-                "description" : "Chat message to send when what control stops",
+                "description" : "Chat message to send when chat control stops",
                 "regex" : None,
                 "convert" : str
             },
