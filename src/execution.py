@@ -193,27 +193,27 @@ class Execution():
     def moveMouse(self, x, y):
         x, y = self.percentageToPixel(float(x), float(y))
         x, y = self.keepInsideBorder(x, y)
-        pg.moveTo(x, y, 0.5, pg.easeInOutQuad)
+        pg.moveTo(x, y, self.config["mousespeed"], pg.easeInOutQuad)
 
     # Move mouse relatively
     def relMouse(self, x, y):
         x, y = self.relPercentageToPixel(float(x), float(y))
         px, py = pg.position()
         tx, ty = self.keepInsideBorder(px + x, py + y)
-        pg.moveTo(tx, ty, 0.5, pg.easeInOutQuad)
+        pg.moveTo(tx, ty, self.config["mousespeed"], pg.easeInOutQuad)
 
     # Draw a box to target position on screen
     def box(self, x, y):
         x, y = self.percentageToPixel(float(x), float(y))
         x, y = self.keepInsideBorder(x, y)
-        pg.dragTo(x, y, 0.5, pg.easeInOutQuad)
+        pg.dragTo(x, y, self.config["mousespeed"], pg.easeInOutQuad)
 
     # Make box relatively
     def relBox(self, x, y):
         x, y = self.relPercentageToPixel(float(x), float(y))
         px, py = pg.position()
         tx, ty = self.keepInsideBorder(px + x, py + y)
-        pg.dragTo(tx, ty, 0.5, pg.easeInOutQuad)
+        pg.dragTo(tx, ty, self.config["mousespeed"], pg.easeInOutQuad)
 
     # Call pg.click directly
     def click(self, shift = False, ctrl = False, alt = False, *args, **kwargs):
