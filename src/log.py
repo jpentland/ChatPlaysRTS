@@ -42,7 +42,7 @@ class Log():
         with self.lock:
             if self.logfile != None:
                 try:
-                    self.logfile.write(message)
+                    self.logfile.write(f"{message}\n")
                     self.logfile.flush()
                 except Exception as e:
                     self.log("Failed to write log")
@@ -58,7 +58,7 @@ class Log():
     # Flush buffer to newly opened log file
     def flushBuffer(self):
         for (message, echo) in self.buffer:
-            self.logfile.write(message)
+            self.logfile.write(f"{message}\n")
             self.logfile.flush()
             if echo:
                 for cb in self.callbacks:
