@@ -23,6 +23,7 @@ class Execution():
         self.on = False
         self.monitor = config.monitor
         self.restrict = None
+        self.controlStateCallback = None
 
         self.actions = {
             "movemouse" : Execution.moveMouse,
@@ -32,6 +33,10 @@ class Execution():
             "relbox" : Execution.relBox,
             "presskey" : Execution.pressKey
         }
+
+    # Set control state callback
+    def setControlStateCallback(self, callback):
+        self.controlStateCallback = callback
 
     # Process an incoming command at runtime
     def processCommand(self, message, badges, bits):
@@ -91,6 +96,9 @@ class Execution():
     def processCommandQueue(self):
 
         self.on = True
+        if self.controlStateCallback:
+            self.controlStateCallback(self.on)
+
         if self.config["sendStartMessage"]:
             self.irc.sendMessage(self.config["startMessage"])
 
@@ -105,12 +113,16 @@ class Execution():
                 if match:
                     self.irc.sendMessage(self.config["startMessage"])
                     self.on = True
+                    if self.controlStateCallback:
+                        self.controlStateCallback(self.on)
 
                 # !stopcontrol
                 match = self.reStop.match(command)
                 if match:
                     self.irc.sendMessage(self.config["stopMessage"])
                     self.on = False
+                    if self.controlStateCallback:
+                        self.controlStateCallback(self.on)
 
                 # !restrict
                 match = self.reRestrict.match(command)
