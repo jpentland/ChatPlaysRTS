@@ -88,19 +88,25 @@ class Gui:
         self.textLock = Lock()
         self.log.addCallback(self.writeLog)
 
-        self.connectionFrame = tk.Frame(master)
-        self.connectionFrame.pack(fill = tk.X)
-        self.connectedLabel = tk.Label(self.connectionFrame, text = "Not connected", fg = "red", padx = 5)
+        self.statusbar = tk.Frame(master)
+        self.statusbar.pack(fill = tk.X)
+        self.connectedLabel = tk.Label(self.statusbar, text = "Not connected", fg = "red", padx = 5)
         self.connectedLabel.pack(side = tk.LEFT)
-        tk.ttk.Separator(self.connectionFrame, orient=tk.VERTICAL).pack(side = tk.LEFT, fill = tk.Y, padx = 5)
+        tk.ttk.Separator(self.statusbar, orient=tk.VERTICAL).pack(side = tk.LEFT, fill = tk.Y, padx = 5)
+        self.statusbar.pack(fill = tk.X)
 
 
-        self.connectionFrame.pack(fill = tk.X)
-        self.extraStatusFrame = tk.Frame(self.connectionFrame)
-        self.controlStateLabel = tk.Label(self.extraStatusFrame, text = "OFF")
-        self.controlStateLabel.pack(side = tk.LEFT)
+        self.stoppedFrame = tk.Frame(self.statusbar)
+        self.stoppedLabel = tk.Label(self.stoppedFrame, text = "Stopped", fg = "red")
+        self.stoppedLabel.pack(side = tk.LEFT)
 
-        tk.ttk.Separator(self.extraStatusFrame, orient=tk.VERTICAL).pack(side = tk.LEFT, fill = tk.Y, padx = 5)
+        tk.ttk.Separator(self.stoppedFrame, orient=tk.VERTICAL).pack(side = tk.LEFT, fill = tk.Y, padx = 5)
+
+        self.restrictFrame = tk.Frame(self.statusbar)
+        self.restrictLabel = tk.Label(self.restrictFrame, text = "")
+        self.restrictLabel.pack(side = tk.LEFT)
+
+        tk.ttk.Separator(self.restrictFrame, orient=tk.VERTICAL).pack(side = tk.LEFT, fill = tk.Y, padx = 5)
 
         self.master.geometry("400x400")
 
@@ -186,10 +192,20 @@ class Gui:
     def open_config(self):
         self.configWindow = Settingswindow(self.master, self.log, self.config)
 
-    def updateControlState(self, state):
+    def updateControlState(self, state, restrict):
         if state:
-            self.extraStatusFrame.pack_forget()
+            self.stoppedFrame.pack_forget()
         else:
-            self.controlStateLabel.config(text = "Stopped", fg = "red")
-            self.extraStatusFrame.pack(side = tk.LEFT)
+            self.stoppedFrame.pack(side = tk.LEFT)
+
+        if restrict == None:
+            self.restrictFrame.pack_forget()
+        else:
+            restrictStr = ""
+            for badge in restrict:
+                restrictStr += f"{badge}, "
+            restrictStr = restrictStr[:-2]
+            self.restrictLabel.config(text = f"Restricted: {restrictStr}")
+            self.restrictFrame.pack(side = tk.LEFT)
+
 
