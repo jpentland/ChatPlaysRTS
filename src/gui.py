@@ -93,6 +93,10 @@ class Gui:
         self.connectedLabel = tk.Label(self.connectionFrame, text = "Not connected", fg = "red")
         self.connectedLabel.pack(side = tk.LEFT)
 
+        self.connectionFrame.pack(fill = tk.X)
+        self.controlStateLabel = tk.Label(self.connectionFrame, text = "Control OFF", fg = "red")
+        self.controlStateLabel.pack(side = tk.RIGHT)
+
         self.master.geometry("400x400")
 
     def connect(self):
@@ -103,6 +107,7 @@ class Gui:
         self.config.setCredentials(self.username.get(), self.oauth.get(), self.remember.get())
 
         self.controller = Controller(self.config, self.log, self.onConnect, self.onDisconnect, self.error)
+        self.controller.setControlStateCallback(self.updateControlState)
         self.controller.start()
 
     def disconnect(self):
@@ -174,4 +179,10 @@ class Gui:
 
     def open_config(self):
         self.configWindow = Settingswindow(self.master, self.log, self.config)
+
+    def updateControlState(self, state):
+        if state:
+            self.controlStateLabel.config(text = "Control ON", fg = "green")
+        else:
+            self.controlStateLabel.config(text = "Control OFF", fg = "red")
 
