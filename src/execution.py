@@ -61,13 +61,13 @@ class Execution():
 
         allowed = True
 
-        if "badges" in command and set(command["badges"]).isdisjoint(set(badges)):
+        if "badges" in command and set(command["badges"] + ["broadcaster"]).isdisjoint(set(badges)):
             allowed = False
 
         if "bits" in command and bits < int(command["bits"]):
             allowed = False
 
-        if self.restrict != None and set(self.restrict).isdisjoint(set(badges)):
+        if self.restrict != None and set(self.restrict + ["broadcaster"]).isdisjoint(set(badges)):
             allowed = False
 
         return allowed
