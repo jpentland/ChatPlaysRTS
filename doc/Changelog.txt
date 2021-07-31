@@ -1,3 +1,9 @@
+Version 0.14
+------
+* Add mouse speed config option
+* Display message in status bar when !stopcontrol or !restrict is in effect
+* !restrict can no longer prevent the broadcaster from executing commands
+
 Version 0.13
 ------
 * Fix some bugs introduced in 0.12 that could cause messages to be read
