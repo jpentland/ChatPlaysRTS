@@ -97,7 +97,7 @@ class Execution():
 
         self.on = True
         if self.controlStateCallback:
-            self.controlStateCallback(self.on)
+            self.controlStateCallback(self.on, self.restrict)
 
         if self.config["sendStartMessage"]:
             self.irc.sendMessage(self.config["startMessage"])
@@ -114,7 +114,7 @@ class Execution():
                     self.irc.sendMessage(self.config["startMessage"])
                     self.on = True
                     if self.controlStateCallback:
-                        self.controlStateCallback(self.on)
+                        self.controlStateCallback(self.on, self.restrict)
 
                 # !stopcontrol
                 match = self.reStop.match(command)
@@ -122,19 +122,23 @@ class Execution():
                     self.irc.sendMessage(self.config["stopMessage"])
                     self.on = False
                     if self.controlStateCallback:
-                        self.controlStateCallback(self.on)
+                        self.controlStateCallback(self.on, self.restrict)
 
                 # !restrict
                 match = self.reRestrict.match(command)
                 if match:
                     self.irc.sendMessage(f"Chat controls restricted to: {match.group(1)}")
                     self.restrict = match.group(1).split(",")
+                    if self.controlStateCallback:
+                        self.controlStateCallback(self.on, self.restrict)
 
                 # !unrestrict
                 match = self.reUnrestrict.match(command)
                 if match:
                     self.irc.sendMessage("Chat control unrestricted")
                     self.restrict = None
+                    if self.controlStateCallback:
+                        self.controlStateCallback(self.on, self.restrict)
 
             if self.on:
                 age = time.time() - epoch
