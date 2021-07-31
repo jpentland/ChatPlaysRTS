@@ -90,12 +90,17 @@ class Gui:
 
         self.connectionFrame = tk.Frame(master)
         self.connectionFrame.pack(fill = tk.X)
-        self.connectedLabel = tk.Label(self.connectionFrame, text = "Not connected", fg = "red")
+        self.connectedLabel = tk.Label(self.connectionFrame, text = "Not connected", fg = "red", padx = 5)
         self.connectedLabel.pack(side = tk.LEFT)
+        tk.ttk.Separator(self.connectionFrame, orient=tk.VERTICAL).pack(side = tk.LEFT, fill = tk.Y, padx = 5)
+
 
         self.connectionFrame.pack(fill = tk.X)
-        self.controlStateLabel = tk.Label(self.connectionFrame, text = "Control OFF", fg = "red")
-        self.controlStateLabel.pack(side = tk.RIGHT)
+        self.extraStatusFrame = tk.Frame(self.connectionFrame)
+        self.controlStateLabel = tk.Label(self.extraStatusFrame, text = "OFF")
+        self.controlStateLabel.pack(side = tk.LEFT)
+
+        tk.ttk.Separator(self.extraStatusFrame, orient=tk.VERTICAL).pack(side = tk.LEFT, fill = tk.Y, padx = 5)
 
         self.master.geometry("400x400")
 
@@ -136,6 +141,7 @@ class Gui:
         self.connectedLabel.config(text = "Not connected", fg = "red")
         self.connectButton.config(state = tk.NORMAL)
         self.disconnectButton.config(state = tk.DISABLED)
+        self.updateControlState(False)
 
     def openConfigDir(self):
         if os.name == 'nt':
@@ -182,7 +188,8 @@ class Gui:
 
     def updateControlState(self, state):
         if state:
-            self.controlStateLabel.config(text = "Control ON", fg = "green")
+            self.extraStatusFrame.pack_forget()
         else:
-            self.controlStateLabel.config(text = "Control OFF", fg = "red")
+            self.controlStateLabel.config(text = "Stopped", fg = "red")
+            self.extraStatusFrame.pack(side = tk.LEFT)
 
