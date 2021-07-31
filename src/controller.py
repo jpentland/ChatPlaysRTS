@@ -16,6 +16,7 @@ class Controller(threading.Thread):
         self.onConnect = onConnect
         self.onDisconnect = onDisconnect
         self.onError = onError
+        self.controlStateCallback = None
 
     def errorOut(self, message, e = None, fatal = False):
         if e == None:
@@ -54,6 +55,7 @@ class Controller(threading.Thread):
             return
 
         self.execution = Execution(self.config, self.commands, self.irc, self.log)
+        self.execution.setControlStateCallback(self.controlStateCallback)
 
         lastError = 0
         self.onConnect()
@@ -78,3 +80,6 @@ class Controller(threading.Thread):
 
     def stop(self):
         self.irc.close()
+
+    def setControlStateCallback(self, callback):
+        self.controlStateCallback = callback
