@@ -2,18 +2,18 @@ DONE * Move config to separate file stored in appropriate user config dir on win
 DONE * Split IRC / command processing into separate files
 DONE * Cleanup regex code to make it easier to add new commands
 DONE * Prevent accidental double clicks
-* Add a wizard for setting up new keybindings
 DONE Prevent moving to edge of the screen
 DONE Start/Stop commands for streamer
 DONE * Split commands.toml to commands.toml and defaultcommands.toml
-* Add GUI with basic config options (username/channel/password) and start/stop button
+DONE* Add GUI with basic config options (username/channel/password) and start/stop button
 DONE * Better handling of errors such as authentication or connection failure
-* Channel points redeem to send message via in-game chat
 DONE * Ability to add new mouse commands via config file
         - E.g. move mouse to predefined locations
 DONE * Handle multiple monitors
-* Ability to set up restricted areas where the mouse cannot be moved via command
-* Ability to sync VIP/moderators to restrict commands to them
+DONE Ability to sync VIP/moderators to restrict commands to them
 DONE * Ability to bind commands to keypresses via config file
-* All config file options also available in GUI
+DONE All config file options also available in GUI
+* Add a wizard for setting up new keybindings
+* Channel points redeem to send message via in-game chat
+* Ability to set up restricted areas where the mouse cannot be moved via command
 * exe installer for windows
