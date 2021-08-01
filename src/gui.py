@@ -9,6 +9,7 @@ from threading import Lock
 from controller import Controller
 from monitor import Monitor
 from settingswindow import Settingswindow
+from commandwindow import CommandWindow
 
 class Gui:
     def __init__(self, master, config, log):
@@ -83,6 +84,7 @@ class Gui:
         self.refreshMonitorMenu()
         self.configMenu.add_cascade(label = "Monitor", menu = self.monitorMenu)
         self.menu.add_cascade(label = "Config", menu = self.configMenu)
+        self.configMenu.add_command(label = "Commands", command = self.open_commands)
         self.configMenu.add_command(label = "Settings", command = self.open_config)
 
         self.helpMenu = tk.Menu(self.menu, tearoff = 0)
@@ -195,6 +197,9 @@ class Gui:
 
     def open_config(self):
         self.configWindow = Settingswindow(self.master, self.log, self.config)
+
+    def open_commands(self):
+        self.commandsWindow = CommandWindow(self.master, self.log, self.config)
 
     def updateControlState(self, state, restrict):
         if state:
