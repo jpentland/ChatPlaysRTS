@@ -151,7 +151,7 @@ class Gui:
         self.connectedLabel.config(text = "Not connected", fg = "red")
         self.connectButton.config(state = tk.NORMAL)
         self.disconnectButton.config(state = tk.DISABLED)
-        self.updateControlState(False)
+        self.updateControlState(True, None)
 
     def openConfigDir(self):
         if os.name == 'nt':
