@@ -27,29 +27,6 @@ class Gui:
         self.username.set(username)
         self.oauth.set(oauth)
 
-        self.menu = tk.Menu(master)
-        self.tprtsMenu = tk.Menu(self.menu, tearoff = 0)
-        self.tprtsMenu.add_command(label = "Open Config Directory", command = self.openConfigDir)
-        self.tprtsMenu.add_separator()
-        self.tprtsMenu.add_command(label = "Quit", command = self.master.quit)
-        self.menu.add_cascade(label = "ChatPlaysRTS", menu = self.tprtsMenu)
-
-        self.configMenu = tk.Menu(self.menu, tearoff = 0)
-        self.monitorMenu = tk.Menu(self.configMenu, tearoff = 0)
-        self.refreshMonitorMenu()
-        self.configMenu.add_cascade(label = "Monitor", menu = self.monitorMenu)
-        self.menu.add_cascade(label = "Config", menu = self.configMenu)
-        self.configMenu.add_command(label = "Settings", command = self.open_config)
-
-        self.helpMenu = tk.Menu(self.menu, tearoff = 0)
-        self.helpMenu.add_command(label = "Readme", command = self.open_readme)
-        self.helpMenu.add_command(label = "Commands Help", command = self.open_commands_help)
-        self.helpMenu.add_command(label = "Keys list", command = self.open_keys_list)
-        self.menu.add_cascade(label = "Help", menu = self.helpMenu)
-
-        self.master.config(menu = self.menu)
-
-
         self.mainframe = tk.Frame(master)
         self.mainframe.pack()
 
@@ -88,7 +65,36 @@ class Gui:
         self.textLock = Lock()
         self.log.addCallback(self.writeLog)
 
-        self.statusbar = tk.Frame(master)
+        self.build_menubar()
+        self.build_statusbar()
+
+        self.master.geometry("400x400")
+
+    def build_menubar(self):
+        self.menu = tk.Menu(self.master)
+        self.tprtsMenu = tk.Menu(self.menu, tearoff = 0)
+        self.tprtsMenu.add_command(label = "Open Config Directory", command = self.openConfigDir)
+        self.tprtsMenu.add_separator()
+        self.tprtsMenu.add_command(label = "Quit", command = self.master.quit)
+        self.menu.add_cascade(label = "ChatPlaysRTS", menu = self.tprtsMenu)
+
+        self.configMenu = tk.Menu(self.menu, tearoff = 0)
+        self.monitorMenu = tk.Menu(self.configMenu, tearoff = 0)
+        self.refreshMonitorMenu()
+        self.configMenu.add_cascade(label = "Monitor", menu = self.monitorMenu)
+        self.menu.add_cascade(label = "Config", menu = self.configMenu)
+        self.configMenu.add_command(label = "Settings", command = self.open_config)
+
+        self.helpMenu = tk.Menu(self.menu, tearoff = 0)
+        self.helpMenu.add_command(label = "Readme", command = self.open_readme)
+        self.helpMenu.add_command(label = "Commands Help", command = self.open_commands_help)
+        self.helpMenu.add_command(label = "Keys list", command = self.open_keys_list)
+        self.menu.add_cascade(label = "Help", menu = self.helpMenu)
+
+        self.master.config(menu = self.menu)
+
+    def build_statusbar(self):
+        self.statusbar = tk.Frame(self.master)
         self.statusbar.pack(fill = tk.X)
         self.connectedLabel = tk.Label(self.statusbar, text = "Not connected", fg = "red", padx = 5)
         self.connectedLabel.pack(side = tk.LEFT)
@@ -107,8 +113,6 @@ class Gui:
         self.restrictLabel.pack(side = tk.LEFT)
 
         tk.ttk.Separator(self.restrictFrame, orient=tk.VERTICAL).pack(side = tk.LEFT, fill = tk.Y, padx = 5)
-
-        self.master.geometry("400x400")
 
     def connect(self):
         self.connectButton.config(state = tk.DISABLED)
