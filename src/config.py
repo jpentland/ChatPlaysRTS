@@ -27,6 +27,9 @@ defaultConfig = {
         },
         "monitor" : {
             "monitor" : "ALL",
+        },
+        "command" : {
+            "commands" : ["default.toml", "usercommands.toml"]
         }
 }
 
