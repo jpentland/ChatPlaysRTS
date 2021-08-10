@@ -10,7 +10,7 @@ class SimpleIrc(threading.Thread):
     def __init__(self, config, log):
         threading.Thread.__init__(self, daemon = True)
         self.username, self.oauth, _ = config.getCredentials()
-        self.channel = "#" + self.username
+        self.channel = f"#{self.username}"
         self.domain = config["irc"]["domain"]
         self.port = config["irc"]["port"]
         self.reMessage = re.compile(r"@(.*):([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
@@ -18,6 +18,7 @@ class SimpleIrc(threading.Thread):
         self.log = log
         self.connected = False
         self.clientDisconnect = False
+        self.buff = ""
         self.server = None
 
     def sendMessage(self, message):
@@ -56,14 +57,13 @@ class SimpleIrc(threading.Thread):
         self.log.log("Connecting...")
         self.server = socket.socket()
         self.server.connect(connection_data)
-        self.serverFile = self.server.makefile()
         self.send('PASS ' + self.oauth)
         self.send('NICK ' + self.username)
         self.send('JOIN ' + self.channel)
         self.send('CAP REQ :twitch.tv/tags')
         while True:
-            message = self.serverFile.readline()
-            if len(message) == 0:
+            message = self.readline().strip()
+            if not message:
                 raise Exception("connection failed")
 
             #Check for connected message
@@ -89,8 +89,8 @@ class SimpleIrc(threading.Thread):
 
         while True:
             try:
-                string = self.serverFile.readline()
-                if len(string) == 0:
+                string = self.readline()
+                if not string:
                     self.log.log("Connection to %s terminated" % self.domain)
                     self.commandQueue.put((time.time(), None, "Disconnected"))
                     self.connected = False
@@ -156,6 +156,18 @@ class SimpleIrc(threading.Thread):
             pass
 
         return username, message, badges, bits
+
+    def readline(self):
+        while True:
+            split = re.split("[\r\n]+", self.buff)
+            if len(split) > 1:
+                self.buff = '\n'.join(split[1:])
+                return split[0]
+
+            recv = self.server.recv(1024)
+            if not recv:
+                return self.buff
+            self.buff += recv.decode("utf-8")
 
     def send(self, string):
         self.server.send(bytes(string + '\r\n', 'utf-8'))
