@@ -15,7 +15,7 @@ class Log():
         self.log("STARTING %s" % strftime("%a, %d %b %Y %H:%M:%S +0000\n", localtime()))
         self.log("*****\n")
 
-        if config != None:
+        if config is not None:
             self.addConfig(config)
 
     # Open log file based on config object
@@ -32,7 +32,8 @@ class Log():
             self.logfile = None
 
     # Get time in log format
-    def logTime(self):
+    @staticmethod
+    def logTime():
         return strftime("%H:%M:%S")
 
     # Write a message to the log file with optional echo to callback
@@ -40,7 +41,7 @@ class Log():
     def log(self, message, echo = True):
         print(message)
         with self.lock:
-            if self.logfile != None:
+            if self.logfile is not None:
                 try:
                     self.logfile.write(f"{message}\n")
                     self.logfile.flush()
@@ -77,4 +78,3 @@ class Log():
     def close(self):
         self.logfile.flush()
         self.logfile.close()
-
