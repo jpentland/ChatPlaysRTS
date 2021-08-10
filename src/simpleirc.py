@@ -13,11 +13,12 @@ class SimpleIrc(threading.Thread):
         self.channel = "#" + self.username
         self.domain = config["irc"]["domain"]
         self.port = config["irc"]["port"]
-        self.reMessage = re.compile("@(.*):([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
+        self.reMessage = re.compile(r"@(.*):([^\s]+)!.* PRIVMSG " + self.channel + " :(.*)")
         self.commandQueue = Queue()
         self.log = log
         self.connected = False
         self.clientDisconnect = False
+        self.server = None
 
     def sendMessage(self, message):
         send = "PRIVMSG " + self.channel + " :" + message
@@ -36,13 +37,14 @@ class SimpleIrc(threading.Thread):
             except Exception as e:
                 if self.clientDisconnect:
                     self.log.log("Connection aborted")
-                    raise ClientDisconnectError()
-                elif triesLeft == 1:
+                    raise ClientDisconnectError from e
+
+                if triesLeft == 1:
                     self.log.log_exception(e)
-                    raise ConnectionFailedError(e)
-                else:
-                    triesLeft -= 1
-                    self.log.log("retrying...")
+                    raise ConnectionFailedError from e
+
+                triesLeft -= 1
+                self.log.log("retrying...")
 
         self.connected = True
 
@@ -79,7 +81,7 @@ class SimpleIrc(threading.Thread):
             # Check for invalid username
             # invalid username means wrong username will be returned from server
             match = re.match(":[^ ]+ [0-9]+ (.*) :>", message)
-            if match != None:
+            if match:
                 if match.group(1) != self.username:
                     raise AuthenticationError()
 
@@ -95,7 +97,7 @@ class SimpleIrc(threading.Thread):
                     self.server.close()
                     return
 
-                if (string[:4] == "PING"):
+                if string[:4] == "PING":
                     self.log.log("Got ping: %s" % repr(string))
                     pong = "PONG" + string[4:]
                     self.log.log("Responding to PING")
@@ -103,7 +105,7 @@ class SimpleIrc(threading.Thread):
                     self.send(pong)
                 else:
                     result = self.parse_privmsg(string)
-                    if result != None:
+                    if result is not None:
                         username, message, badges, bits = result
                         self.log_privmsg(username, message, badges, bits)
                         self.commandQueue.put((time.time(), username, (message, badges, bits)))
@@ -131,7 +133,7 @@ class SimpleIrc(threading.Thread):
 
     def parse_privmsg(self, string):
         match = self.reMessage.match(string)
-        if match == None:
+        if match is None:
             return None
 
         taglist = match.group(1)
@@ -140,8 +142,8 @@ class SimpleIrc(threading.Thread):
 
         tags = {}
         for tag in taglist.split(";"):
-             kv = tag.split("=")
-             tags[kv[0]] = kv[1]
+            kv = tag.split("=")
+            tags[kv[0]] = kv[1]
 
         badges = []
         for badge in tags["badges"].split(","):
@@ -160,11 +162,10 @@ class SimpleIrc(threading.Thread):
 
     def receive(self):
         epoch, sender, info = self.commandQueue.get()
-        if sender == None:
-            if self.clientDisconnect == True:
+        if sender is None:
+            if self.clientDisconnect:
                 raise ClientDisconnectError()
-            else:
-                raise ConnectionFailedError(info)
+            raise ConnectionFailedError(info)
 
         message, badges, bits = info
 
