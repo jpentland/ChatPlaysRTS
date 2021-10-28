@@ -265,12 +265,16 @@ class Execution():
 
         if type(key) is list:
             for k in key:
+                if type(k) in (float, int):
+                    k = f"{int(k)}"
                 pg.keyDown(k)
             if duration > 0:
                 time.sleep(duration)
             for k in key:
                 pg.keyUp(k)
         else:
+            if type(key) in (float, int):
+                key = f"{int(key)}"
             pg.keyDown(key)
             time.sleep(duration)
             pg.keyUp(key)
