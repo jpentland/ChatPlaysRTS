@@ -1,3 +1,7 @@
+Version 0.15
+-----
+* Fix bug causing unicode characters to disconnect the chat
+
 Version 0.14
 ------
 * Add mouse speed config option
