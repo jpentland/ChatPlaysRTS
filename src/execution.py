@@ -258,7 +258,7 @@ class Execution():
         if maxduration != -1 and maxduration < duration:
             duration = maxduration
 
-        mods = zip([ctrl, alt, shift], ["ctrl", "alt","shift"])
+        mods = zip([ctrl, alt, shift], ["ctrl", "alt", "shift"])
         for on, mod in mods:
             if on:
                 pg.keyDown(mod)
