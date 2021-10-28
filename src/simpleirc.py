@@ -112,6 +112,9 @@ class SimpleIrc(threading.Thread):
                     else:
                         self.log.log(string)
 
+            except UnicodeEncodeError:
+                self.log.log("WARNING: UnicodeEncodeError when trying to read chat message")
+
             except Exception as error:
                 self.log.log_exception(error)
                 self.commandQueue.put((time.time(), None, error.args))
