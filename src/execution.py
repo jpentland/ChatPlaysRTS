@@ -60,18 +60,16 @@ class Execution():
     # Check whether command is authorized (required badges or min bits)
     def commandAuthorized(self, command, badges, bits):
 
-        allowed = True
-
         if "badges" in command and set(command["badges"] + ["broadcaster"]).isdisjoint(set(badges)):
-            allowed = False
+            return False
 
         if "bits" in command and bits < int(command["bits"]):
-            allowed = False
+            return False
 
         if self.restrict != None and set(self.restrict + ["broadcaster"]).isdisjoint(set(badges)):
-            allowed = False
+            return False
 
-        return allowed
+        return True
 
     # Perform a single action (legacy format)
     def performSingleOperation(self, command, match):
