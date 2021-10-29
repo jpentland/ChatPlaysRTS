@@ -253,7 +253,7 @@ class Execution():
         self.lastClick = time.time()
 
     # Allow pressing a key
-    def pressKey(self, key, shift = False, ctrl = False, alt = False, duration = 0, maxduration = -1):
+    def pressKey(self, key, shift = False, ctrl = False, alt = False, duration = 0.1, maxduration = -1):
 
         # Used to prevent viewers from specifying very large durations
         if maxduration != -1 and maxduration < duration:
