@@ -250,6 +250,16 @@ class Execution():
         pg.click(*args, **kwargs)
         self.lastClick = time.time()
 
+    # mods up or down
+    def setMods(self, down, shift, ctrl, alt):
+        mods = zip([ctrl, alt, shift], ["ctrl", "alt", "shift"])
+        for on, mod in mods:
+            if on:
+                if down:
+                    pg.keyDown(mod)
+                else:
+                    pg.keyUp(mod)
+
     # Allow pressing a key
     def pressKey(self, key, shift = False, ctrl = False, alt = False, duration = 0.1, maxduration = -1):
 
@@ -257,10 +267,7 @@ class Execution():
         if maxduration != -1 and maxduration < duration:
             duration = maxduration
 
-        mods = zip([ctrl, alt, shift], ["ctrl", "alt", "shift"])
-        for on, mod in mods:
-            if on:
-                pg.keyDown(mod)
+        self.setMods(True, shift, ctrl, alt)
 
         if type(key) is list:
             for k in key:
@@ -278,9 +285,7 @@ class Execution():
             time.sleep(duration)
             pg.keyUp(key)
 
-        for on, mod in mods:
-            if on:
-                pg.keyUp(mod)
+        self.setMods(False, shift, ctrl, alt)
 
     # Wait for some time
     def wait(self, duration = 0):
