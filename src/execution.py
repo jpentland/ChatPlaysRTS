@@ -31,7 +31,8 @@ class Execution():
             "relmouse" : Execution.relMouse,
             "box" : Execution.box,
             "relbox" : Execution.relBox,
-            "presskey" : Execution.pressKey
+            "presskey" : Execution.pressKey,
+            "wait" : Execution.wait
         }
 
     # Set control state callback
@@ -282,4 +283,8 @@ class Execution():
         for on, mod in mods:
             if on:
                 pg.keyUp(mod)
+
+    # Wait for some time
+    def wait(self, duration = 0):
+        time.sleep(duration)
 
