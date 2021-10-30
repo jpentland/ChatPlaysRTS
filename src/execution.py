@@ -1,6 +1,7 @@
 import pyautogui as pg
 import re
 import time
+import random
 
 pg.PAUSE = 0
 pg.FAILSAFE=False
@@ -27,6 +28,7 @@ class Execution():
 
         self.actions = {
             "movemouse" : Execution.moveMouse,
+            "randommovemouse" : Execution.randomMoveMouse,
             "click" : Execution.click,
             "relmouse" : Execution.relMouse,
             "box" : Execution.box,
@@ -206,6 +208,15 @@ class Execution():
 
     # Move mouse to location on screen
     def moveMouse(self, x, y):
+        x, y = self.percentageToPixel(float(x), float(y))
+        x, y = self.keepInsideBorder(x, y)
+        pg.moveTo(x, y, self.config["mousespeed"], pg.easeInOutQuad)
+
+    # Move mouse to a random location on screen within a box
+    def randomMoveMouse(self, xmin, xmax, ymin, ymax):
+        random.seed()
+        x = random.randrange(xmin, xmax)
+        y = random.randrange(ymin, ymax)
         x, y = self.percentageToPixel(float(x), float(y))
         x, y = self.keepInsideBorder(x, y)
         pg.moveTo(x, y, self.config["mousespeed"], pg.easeInOutQuad)
