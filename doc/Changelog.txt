@@ -1,3 +1,12 @@
+version 0.16
+-----
+* Add action "randommovemouse" to move mouse to random location within a
+defined box
+* Add wait action
+* Bug fix when using key presses with modifiers
+* Fix error with commands pressing number keys
+* Fix some timing related issues
+
 Version 0.15
 -----
 * Fix bug causing unicode characters to disconnect the chat

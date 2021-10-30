@@ -201,6 +201,17 @@ Currently supported actions:
               - shift = true, hold down shift while pressing key
               - alt = true, hold down shift while pressing key
               - ctrl = true, hold down shift while pressing key
+* wait
+      - Wait for a given amount of time, before performing the next action
+      - Required parameters: duration
+
+* randomMoveMouse:
+      - Move the mouse to a random location, within a defined box
+      - Required parameters
+            - xmin
+            - xmax
+            - ymin
+            - ymax
 
 ------------
 Parameters
