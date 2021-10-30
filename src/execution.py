@@ -258,6 +258,8 @@ class Execution():
             if on:
                 pg.keyUp(mod)
 
+        time.sleep(0.1)
+
         pg.click(*args, **kwargs)
         self.lastClick = time.time()
 
