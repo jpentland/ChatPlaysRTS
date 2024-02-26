@@ -428,10 +428,10 @@ key = "."
 action = "randomMoveMouse"
 
 [command.action.params]
-xmin = 10
-xmax = 75
+xmin = 20
+xmax = 65
 ymin = 10
-ymax = 75
+ymax = 65
 
 [[command.action]]
 action = "presskey"
@@ -464,10 +464,10 @@ key = "."
 action = "randomMoveMouse"
 
 [command.action.params]
-xmin = 10
-xmax = 75
-ymin = 10
-ymax = 75
+xmin = 20
+xmax = 65
+ymin = 20
+ymax = 65
 
 [[command.action]]
 action = "presskey"
@@ -530,14 +530,32 @@ action = "click"
 button = "left"
 
 [[command]]
-regex = "!buildarcheryrange"
+regex = "!build(archery)*range"
 
 [[command.action]]
 action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
 
 [[command]]
 regex = "!buildkrepost"
 
+[[command.action]]
+action = "presskey"
+
 [command.action.params]
 key = "w"
 
@@ -545,7 +563,49 @@ key = "w"
 action = "presskey"
 
 [command.action.params]
+key = "t"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!build(sw|siegeworkshop)"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
 key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "r"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!build(watch)*tower"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "f"
 
 [[command.action]]
 action = "click"
@@ -642,7 +702,6 @@ button = "left"
 
 [[command]]
 regex = "!buildmill"
-
 
 [[command.action]]
 action = "presskey"
