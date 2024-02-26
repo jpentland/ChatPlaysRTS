@@ -1,0 +1,1037 @@
+#
+# Extra mouse command
+#
+[[command]]
+regex = "% *([0-9\\.]+) ([0-9\\.]+)"
+action = "moveMouse"
+
+        [command.params]
+        x = "{group[0]}"
+        y = "{group[1]}"
+
+#
+# Control groups
+#
+
+[[command]]
+regex = "!cg([1-9])"
+action = "presskey"
+
+[command.params]
+key = "{group[0]}"
+ctrl = true
+
+[[command]]
+regex = "!([1-9])"
+action = "presskey"
+
+[command.params]
+key = "{group[0]}"
+ctrl = true
+shift = true
+
+#
+# Letter hotkeys
+#
+
+[[command]]
+regex = "!([a-z])"
+action = "presskey"
+
+[command.params]
+key = "{group[0]}"
+
+#
+# Select Units
+#
+
+[[command]]
+regex = "!,"
+action="presskey"
+
+[command.params]
+key = ","
+
+[[command]]
+regex = "!idle"
+action="presskey"
+
+[command.params]
+key = "."
+
+[[command]]
+regex = "!(idles|allidles)"
+action="presskey"
+
+[command.params]
+key = "."
+shift = true
+
+[[command]]
+regex = "!allmilitary"
+action="presskey"
+
+[command.params]
+key = ","
+shift = true
+
+#
+# Select buildings
+#
+[[command]]
+regex = "!(tc|towncenter)"
+action = "presskey"
+
+[command.params]
+key = "h"
+shift = true
+ctrl = true
+
+
+[[command]]
+regex = "!(archery)*range"
+action = "presskey"
+
+[command.params]
+key = "a"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!barracks"
+action = "presskey"
+
+[command.params]
+key = "b"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!castle"
+action = "presskey"
+
+[command.params]
+key = "v"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!dock"
+action = "presskey"
+
+[command.params]
+key = "d"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!krepost"
+action = "presskey"
+
+[command.params]
+key = "t"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!monastery"
+action = "presskey"
+
+[command.params]
+key = "y"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!siegeworkshop"
+action = "presskey"
+
+[command.params]
+key = "k"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!stable"
+action = "presskey"
+
+[command.params]
+key = "l"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!tc"
+action = "presskey"
+
+[command.params]
+key = "h"
+shift = true
+ctrl = true
+
+[[command]]
+regex = "!blacksmith"
+action = "presskey"
+
+[command.params]
+key = "s"
+ctrl = true
+shift = true
+
+[[command]]
+regex = "!lumbercamp"
+action = "presskey"
+
+[command.params]
+key = "z"
+ctrl = true
+
+[[command]]
+regex = "!market"
+action = "presskey"
+
+[command.params]
+key = "m"
+ctrl = true
+
+[[command]]
+regex = "!mill"
+action = "presskey"
+
+[command.params]
+key = "i"
+ctrl = true
+
+[[command]]
+regex = "!miningcamp"
+action = "presskey"
+
+[command.params]
+key = "c"
+ctrl = true
+
+[[command]]
+regex = "!university"
+action = "presskey"
+
+[command.params]
+key = "u"
+ctrl = true
+
+#
+# Chat messages
+#
+
+# gg
+[[command]]
+regex = "!gg"
+badges = ["broadcaster","moderator"]
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "return"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "g"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "g"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "return"
+
+# ggwp
+[[command]]
+regex = "!ggwp"
+badges = ["broadcaster","moderator"]
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "return"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "g"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "g"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "p"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "return"
+
+# 105
+[[command]]
+regex = "!105"
+badges = ["broadcaster","moderator"]
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "return"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "1"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "0"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "5"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "return"
+
+# ggwp
+[[command]]
+regex = "!glhf"
+badges = ["broadcaster","moderator"]
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "return"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "g"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "l"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "h"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "f"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "return"
+duration = "1"
+
+#
+# Build macros
+#
+
+[[command]]
+regex = "!buildhouse"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildfarm"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "a"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!spamfarm"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "."
+
+[[command.action]]
+action = "randomMoveMouse"
+
+[command.action.params]
+xmin = 10
+xmax = 75
+ymin = 10
+ymax = 75
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "a"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!spamhouse"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "."
+
+[[command.action]]
+action = "randomMoveMouse"
+
+[command.action.params]
+xmin = 10
+xmax = 75
+ymin = 10
+ymax = 75
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildblacksmith"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "s"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!builddock"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "t"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildarcheryrange"
+
+[[command.action]]
+action = "presskey"
+
+[[command]]
+regex = "!buildkrepost"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildbarracks"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildcastle"
+
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "c"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildlumbercamp"
+
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "r"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildminingcamp"
+
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "e"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildmill"
+
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildmonastery"
+
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "f"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!build(towncenter|tc)"
+
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "z"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!builduniversity"
+
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "c"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildwonder"
+
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "x"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildkrepost"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "t"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildmarket"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "q"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "d"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command]]
+regex = "!buildpalisade (-?[0-9\\.]+) (-?[0-9\\.]+)"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "s"
+
+[[command.action]]
+action = "box"
+
+        [command.action.params]
+        x = "{group[0]}"
+        y = "{group[1]}"
+
+[[command]]
+regex = "!buildwall (-?[0-9\\.]+) (-?[0-9\\.]+)"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "w"
+
+[[command.action]]
+action = "presskey"
+
+[command.action.params]
+key = "d"
+
+[[command.action]]
+action = "box"
+
+        [command.action.params]
+        x = "{group[0]}"
+        y = "{group[1]}"
+
+#
+# Preset mouse locations
+#
+
+# resign
+[[command]]
+regex = "!resign"
+badges = ["broadcaster","moderator"]
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# menu
+x = "98"
+y = "2"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# resign
+x = "50"
+y = "42"
+
+[[command.action]]
+action = "click"
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# confirm resign
+x = "40"
+y = "55"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# return to map
+x = "40"
+y = "66"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+# Leave game, showtimeline and queue next game
+[[command]]
+regex = "!nextgame"
+badges = ["broadcaster","moderator"]
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# menu
+x = "98"
+y = "2"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# leave game
+x = "50"
+y = "42"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "wait"
+
+[command.action.params]
+duration = 3
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# military stats
+x = "30"
+y = "5"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "wait"
+
+[command.action.params]
+duration = 3
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# timeline
+x = "75"
+y = "5"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "wait"
+
+[command.action.params]
+duration = 5
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# main menu
+x = "25"
+y = "85"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# multiplayer/ranked
+x = "25"
+y = "50"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+[[command.action]]
+action = "moveMouse"
+
+[command.action.params]
+# queue
+x = "70"
+y = "38"
+
+[[command.action]]
+action = "click"
+
+[command.action.params]
+button = "left"
+
+#
+# Delete
+#
+[[command]]
+regex = "!delete"
+action = "presskey"
+badges = ["broadcaster","moderator"]
+
+[command.params]
+key = "delete"
