@@ -156,6 +156,8 @@ class Execution():
 
         # Try to convert all matched values to float, if possible
         for g in match.groups():
+            if g is None:
+                continue
             try:
                 group.append(float(g))
             except ValueError:
