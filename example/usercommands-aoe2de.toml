@@ -143,7 +143,7 @@ shift = true
 ctrl = true
 
 [[command]]
-regex = "!siegeworkshop"
+regex = "!(siegeworkshop|sw)"
 action = "presskey"
 
 [command.params]
@@ -416,7 +416,7 @@ action = "click"
 button = "left"
 
 [[command]]
-regex = "!spamfarm"
+regex = "!(t90|spam)farm"
 
 [[command.action]]
 action = "presskey"
@@ -452,7 +452,7 @@ action = "click"
 button = "left"
 
 [[command]]
-regex = "!spamhouse"
+regex = "!(t90|spam)house"
 
 [[command.action]]
 action = "presskey"
