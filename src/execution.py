@@ -9,15 +9,15 @@ pg.FAILSAFE=False
 class Execution():
     def __init__(self, config, commands, irc, log):
         self.config = config["execution"]
-        self.reEval = re.compile("^\s*{(.*)}\s*$")
+        self.reEval = re.compile("^\\s*{(.*)}\\s*$")
         self.lastClick = 0
         self.log = log
         self.commandQueue = irc.commandQueue
         self.commands = commands
         self.irc = irc
-        self.reStart = re.compile("^!startcontrol\s*$")
-        self.reStop = re.compile("^!stopcontrol\s*$")
-        self.reRestrict = re.compile("^!restrict ([a-z\-,]+)\s*$")
+        self.reStart = re.compile("^!startcontrol\\s*$")
+        self.reStop = re.compile("^!stopcontrol\\s*$")
+        self.reRestrict = re.compile("^!restrict ([a-z\\-,]+)\\s*$")
         self.reUnrestrict = re.compile("^!unrestrict")
         self.timeout = self.config["timeout"]
         self.owner = config["credentials"]["username"]
@@ -152,7 +152,6 @@ class Execution():
     def processArgs(self, kwargs, match):
         newkwArgs = {}
         group = []
-        config = self.config
 
         # Try to convert all matched values to float, if possible
         for g in match.groups():
