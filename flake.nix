@@ -18,7 +18,11 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          buildInputs = [ python_packages ];
+          buildInputs = [
+            python_packages
+            pkgs.rsync
+            pkgs.zip
+          ];
         };
       }
     );
