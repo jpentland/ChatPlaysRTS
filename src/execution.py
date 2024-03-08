@@ -152,6 +152,7 @@ class Execution():
     def processArgs(self, kwargs, match):
         newkwArgs = {}
         group = []
+        config = self.config
 
         # Try to convert all matched values to float, if possible
         for g in match.groups():
